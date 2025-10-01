@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-gradle-wrapper-
 
       - name: Configurar Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           build-scan-publish: false
 
@@ -102,7 +102,7 @@ jobs:
             ${{ runner.os }}-gradle-wrapper-
 
       - name: Configurar Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           build-scan-publish: false
 
