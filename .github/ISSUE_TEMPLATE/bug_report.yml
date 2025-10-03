@@ -1,46 +1,63 @@
-name: Relatório de Bug
-description: Envie um relatório de bug
-title: "[Bug]: "
-labels: ["bug", "triagem necessária"]
+name: Reportar um Bug no Catfeina
+description: Encontrou algo que não está funcionando como deveria no aplicativo Catfeina?
 body:
   - type: markdown
     attributes:
       value: |
-        Obrigado por dedicar um tempo para preencher este relatório de bug!
-  - type: checkboxes
-    attributes:
-      label: Já existe uma issue para isso?
-      description: Por favor, pesquise para ver se já existe uma issue para o bug que você encontrou.
-      options:
-      - label: Eu pesquisei nas issues existentes
-        required: true
-  - type: checkboxes
-    attributes:
-      label: Existe uma pergunta no StackOverflow sobre esse problema?
-      description: Por favor, pesquise no [StackOverflow](https://stackoverflow.com/questions/tagged/android-jetpack) se já existe uma resposta para o bug que você encontrou.
-      options:
-      - label: Eu pesquisei no StackOverflow
-        required: true
+        Obrigado por ajudar a melhorar o Catfeina!
+        Antes de reportar, por favor, verifique se já não existe uma issue similar aberta.
   - type: textarea
-    id: what-happened
     attributes:
-      label: O que aconteceu?
-      description: Também nos diga o que você esperava que acontecesse.
-      placeholder: Conte-nos o que você viu!
-      value: "Um bug aconteceu!"
+      label: Descreva o Bug
+      description: O que aconteceu e o que você esperava que acontecesse?
+      placeholder: |
+        Ex: Ao clicar no botão 'Favoritar', o aplicativo fecha inesperadamente. Eu esperava que o poema fosse salvo como favorito.
     validations:
       required: true
   - type: textarea
-    id: logs
     attributes:
-      label: Saída relevante do logcat
-      description: Por favor, copie e cole qualquer saída relevante do logcat. Isso será formatado automaticamente como código, então não é necessário usar crases.
-      render: shell
-  - type: checkboxes
-    id: terms
+      label: Passos para Reproduzir
+      description: Como podemos reproduzir o problema?
+      placeholder: |
+        1. Abra o aplicativo.
+        2. Navegue para a tela de uma poesia.
+        3. Clique no ícone de coração (Favoritar).
+        4. O app fecha.
+    validations:
+      required: true
+  - type: input
     attributes:
-      label: Código de Conduta
-      description: Ao enviar esta issue, você concorda em seguir nosso [Código de Conduta](CODE_OF_CONDUCT.md)
-      options:
-        - label: Eu concordo em seguir o Código de Conduta deste projeto
-          required: true
+      label: Versão do Catfeina
+      description: Se você souber a versão do aplicativo, informe aqui.
+      placeholder: Ex. v1.0.0
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Logs ou Mensagens de Erro (se houver)
+      description: Copie e cole quaisquer logs relevantes do Logcat. Isso é extremamente útil!
+      render: console
+      placeholder: |
+        [Cole os logs aqui]
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### **Ambiente de Execução**
+  - type: input
+    attributes:
+      label: Modelo do Dispositivo
+      description: Em qual aparelho o bug aconteceu?
+      placeholder: Ex. Pixel 7, Samsung Galaxy S23
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Versão do Android
+      description: Qual a versão do sistema operacional Android do seu dispositivo?
+      placeholder: Ex. Android 13, Android 14
+    validations:
+      required: true
+

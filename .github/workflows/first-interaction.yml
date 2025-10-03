@@ -1,0 +1,50 @@
+# .github/workflows/first-interaction.yml
+name: First Interaction Greeting (Bilingual)
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target: # Usar pull_request_target é mais seguro para PRs de forks
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  greet_in_portuguese:
+    name: "Greet in Portuguese"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greet on first issue or PR (PT-BR)
+        uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # Mensagem para quem abre uma issue pela primeira vez
+          issue-message: |
+            👋 Olá @${{ github.actor }}! Obrigado por abrir sua primeira issue no Catfeina.
+            Agradecemos sua contribuição para tornar o projeto melhor. Daremos uma olhada assim que possível.
+          # Mensagem para quem abre um PR pela primeira vez
+          pr-message: |
+            🎉 Olá @${{ github.actor }}! Obrigado por enviar seu primeiro Pull Request para o Catfeina!
+            É incrível ver novos contribuidores. Por favor, certifique-se de que você leu nosso [Guia de Contribuição](https://github.com/${{ github.repository }}/blob/main/CONTRIBUTING.md).
+            Vamos revisar seu PR em breve.
+
+  greet_in_english:
+    name: "Greet in English"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greet on first issue or PR (EN)
+        uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # Message for first-time issue openers
+          issue-message: |
+            👋 Hello @${{ github.actor }}! Thanks for opening your first issue in the Catfeina project.
+            We appreciate your contribution to making the project better. We'll take a look as soon as possible.
+          # Message for first-time PR openers
+          pr-message: |
+            🎉 Hello @${{ github.actor }}! Thank you for submitting your first Pull Request to Catfeina!
+            It's awesome to see new contributors. Please make sure you've read our [Contribution Guide](https://github.com/${{ github.repository }}/blob/main/CONTRIBUTING.md).
+            We'll review your PR shortly.
+

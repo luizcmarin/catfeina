@@ -1,116 +1,28 @@
-# =============================================================================
-# Arquivo: .github/dependabot.yml
-# Descrição: Configuração do Dependabot para o projeto Catfeina.
-# =============================================================================
-
+# .github/dependabot.yml
 version: 2
 updates:
-  # --- Atualizações para dependências Gradle (via libs.versions.toml) ---
-  - package-ecosystem: "gradle"
-    directory: "/" # Raiz do projeto, onde o Dependabot procurará por builds Gradle
-    schedule:
-      interval: "daily" # Verifica por atualizações diariamente
-    open-pull-requests-limit: 10 # Limite de PRs abertos para Gradle
-    reviewers:
-      - "luizcmarin" # Seu nome de usuário GitHub para revisão
-    assignees:
-      - "luizcmarin" # Seu nome de usuário GitHub para atribuição
-    commit-message:
-      prefix: "deps(gradle)"
-      include: "scope"
-    labels:
-      - "dependencies"
-      - "gradle"
-    # Agrupamentos para reduzir o número de PRs de dependências Gradle
-    groups:
-      # Agrupa todas as bibliotecas AndroidX
-      androidx:
-        patterns:
-          - "androidx.core*"
-          - "androidx.lifecycle*"
-          - "androidx.activity*"
-          - "androidx.fragment*"
-          - "androidx.appcompat*"
-          - "androidx.compose*"
-          - "androidx.navigation*"
-          - "androidx.room*"
-          - "androidx.datastore*"
-          - "androidx.test*"
-          - "androidx.hilt*"
-          # Adicione outros padrões androidx se necessário
-          # exclude-patterns:
-          # - "androidx.compose.compiler*" # Exemplo se você quiser excluir algo do grupo
-
-      # Agrupa bibliotecas Kotlin
-      kotlin:
-        patterns:
-          - "org.jetbrains.kotlin*"
-          - "com.google.devtools.ksp*"
-          # exclude-patterns:
-          # - "org.jetbrains.kotlin.jvm" # Exemplo
-
-      # Agrupa bibliotecas Dagger Hilt
-      hilt:
-        patterns:
-          - "com.google.dagger*"
-        # androidx.hilt já está coberto pelo grupo androidx
-
-      # Agrupa ferramentas de build como AGP
-      android-build-tools:
-        patterns:
-          - "com.android.tools.build*" # Para o Android Gradle Plugin
-
-      # Outras bibliotecas comuns (exemplo, ajuste conforme seu projeto)
-      # common-libraries:
-      #   patterns:
-      #     - "com.airbnb.android:lottie*"
-      #     - "outra-lib:*"
-
-  # --- Atualizações para GitHub Actions ---
+  # Manter GitHub Actions atualizadas
   - package-ecosystem: "github-actions"
-    directory: "/" # Verifica workflows na raiz do repositório (e subdiretórios .github/workflows)
+    directory: "/" # Procura em .github/workflows/
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 5 # Limite de PRs abertos para GitHub Actions
-    reviewers:
-      - "luizcmarin"
-    assignees:
-      - "luizcmarin"
-    commit-message:
-      prefix: "chore(actions)"
-      include: "scope"
-    labels:
-      - "github_actions"
-      - "dependencies"
-    # Agrupa atualizações comuns de actions para reduzir ruído
+      interval: "weekly"
     groups:
-      common-actions:
+      github-actions:
         patterns:
-          - "actions/checkout"
-          - "actions/setup-kotlin"
-          - "gradle/actions/setup-gradle"
-          - "reactivecircus/android-emulator-runner"
-          - "actions/upload-artifact"
-          - "github/codeql-action/*" # Se você usa CodeQL
-          - "stefanzweifel/git-auto-commit-action"
-          # Adicione outras actions que você usa frequentemente
+          - "*"
 
-# --- Configurações Globais do Dependabot (Opcional) ---
-# Você pode definir um registro privado aqui se suas dependências vierem de um.
-# registries:
-#   maven-github: # Nome do seu registro
-#     type: "maven-repository"
-#     url: "https://maven.pkg.github.com/OWNER" # URL do seu registro
-#     token: ${{secrets.GH_PACKAGES_TOKEN}} # Segredo contendo o token de acesso
+  # Manter dependências Gradle (Kotlin/Android) atualizadas
+  - package-ecosystem: "gradle"
+    directory: "/" # Onde os arquivos build.gradle.kts e libs.versions.toml estão
+    schedule:
+      interval: "weekly"
+    groups:
+      android-dependencies: # Agrupa todas as dependências do Android/Kotlin
+        patterns:
+          - "*" # Padrão para pegar todas as dependências do Gradle
+    labels:
+      - "dependencies"
+      - "android"
 
-
-# --- Configurações de Segurança do Dependabot ---
-# Estas são geralmente gerenciadas nas configurações do repositório (Code security and analysis),
-# mas você pode adicionar algumas configurações aqui se necessário, embora seja menos comum para
-# a configuração básica de segurança.
-#
-# Para alertas de segurança, o Dependabot os cria automaticamente se habilitado nas configurações do repo.
-# Para atualizações de segurança (PRs automáticos para vulnerabilidades),
-# isso também é habilitado nas configurações do repo.
-# O arquivo dependabot.yml foca principalmente nas "version updates".
-
+# Opcional: Configurar limites para o número de PRs abertos pelo Dependabot
+# open-pull-requests-limit: 10

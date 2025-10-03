@@ -4,19 +4,17 @@
 // =============================================================================
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.sqldelight)
 }
 
 android {
     namespace = "com.marin.catfeina"
     compileSdk = libs.versions.compileSdk.get().toInt()
-    flavorDimensions += "app"
 
     defaultConfig {
         applicationId = "com.marin.catfeina"
@@ -28,9 +26,6 @@ android {
         buildConfigField("boolean", "ROOM_EXPORT_SCHEMA", "true")
         buildConfigField("int", "VERSION_CODE", libs.versions.versionCode.get())
         buildConfigField("String", "VERSION_NAME", "\"${libs.versions.versionName.get()}\"")
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["dagger.hilt.android.internal.disableAndroidSuperclassValidation"] = "true"
     }
 
     buildTypes {
@@ -65,11 +60,6 @@ android {
         }
     }
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-    }
-
     buildFeatures {
         compose = true
         buildConfig = true
@@ -92,39 +82,22 @@ android {
         warningsAsErrors = false
     }
 
-    sourceSets["main"].java.srcDirs("src/main/java", "src/main/kotlin")
 }
 
 dependencies {
-    implementation(libs.bundles.core.essentials)
-    implementation(libs.timber)
-
+    implementation(libs.bundles.core)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose.ui.core)
-    implementation(libs.bundles.compose.app.support)
+    implementation(libs.timber)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.datastore.core)
+}
 
-    implementation(libs.bundles.hilt.core.injection)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
-
-    implementation(libs.bundles.room.data)
-    ksp(libs.androidx.room.compiler)
-
-    implementation(libs.bundles.datastore)
-
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.animation.graphics) // Verifique a necessidade
-    implementation(libs.androidx.core.animation)   // Verifique a necessidade
-
-    implementation(libs.androidx.work.runtime.ktx)
-
-    testImplementation(libs.bundles.testing.base)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.bundles.compose.testing.ui)
-    // androidTestImplementation(libs.androidx.test.rules)    // Adicionar se necessário
-    // androidTestImplementation(libs.androidx.test.core)     // Adicionar se necessário
-
-    debugImplementation(libs.androidx.ui.tooling)
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("com.marin")
+        }
+    }
 }
 
 
@@ -176,49 +149,35 @@ project.afterEvaluate {
     }?.finalizedBy(tasks.named("openReleaseLintReport"))
 }
 
-// =============================================================================
-// Tarefa: Cópia de banco de dados e imagens do projeto catfeina_php
-// =============================================================================
-
-val caminhoBase = "C:/marin/apps/catfeina_php"
-val dbOrigem = file("$caminhoBase/data/catfeina.db")
-val imagensOrigem = file("$caminhoBase/webroot/catfeina")
-val pastaAssets = layout.projectDirectory.dir("src/main/assets").asFile
-val pastaDbDestino = File(pastaAssets, "databases")
-val pastaImagensDestino = File(pastaAssets, "catfeina")
-
-tasks.register<Delete>("limparAssets") {
-    delete(pastaDbDestino, pastaImagensDestino)
-}
-
-val copiarDadosParaAssets = tasks.register("copiarDadosParaAssets") {
-    dependsOn("limparAssets")
-    doLast {
-        if (!dbOrigem.exists()) throw GradleException("Banco de dados não encontrado: ${dbOrigem.absolutePath}")
-        if (!imagensOrigem.exists() || !imagensOrigem.isDirectory) throw GradleException("Pasta de imagens inválida: ${imagensOrigem.absolutePath}")
-
-        pastaDbDestino.mkdirs()
-        pastaImagensDestino.mkdirs()
-
-        dbOrigem.copyTo(File(pastaDbDestino, dbOrigem.name), overwrite = true)
-
-        imagensOrigem.walkTopDown().filter { it.isFile }.forEach { arquivo ->
-            val destinoRelativo = arquivo.relativeTo(imagensOrigem)
-            val destinoFinal = File(pastaImagensDestino, destinoRelativo.path)
-            destinoFinal.parentFile.mkdirs()
-            arquivo.copyTo(destinoFinal, overwrite = true)
-        }
-
-        val dbCopiado = File(pastaDbDestino, dbOrigem.name).exists()
-        val imagensCopiadas = pastaImagensDestino.listFiles()?.isNotEmpty() == true
-
-        println("Banco de dados: ${if (dbCopiado) "copiado com sucesso." else "falhou."}")
-        println("Imagens: ${if (imagensCopiadas) "copiadas com sucesso." else "falharam."}")
-
-        if (!dbCopiado || !imagensCopiadas) throw GradleException("Falha na cópia dos dados. Verifique os arquivos e permissões.")
-    }
-}
-
-tasks.named("preBuild") {
-    dependsOn(copiarDadosParaAssets)
-}
+//
+//val copiarDadosParaAssets = tasks.register("copiarDadosParaAssets") {
+//    dependsOn("limparAssets")
+//    doLast {
+//        if (!dbOrigem.exists()) throw GradleException("Banco de dados não encontrado: ${dbOrigem.absolutePath}")
+//        if (!imagensOrigem.exists() || !imagensOrigem.isDirectory) throw GradleException("Pasta de imagens inválida: ${imagensOrigem.absolutePath}")
+//
+//        pastaDbDestino.mkdirs()
+//        pastaImagensDestino.mkdirs()
+//
+//        dbOrigem.copyTo(File(pastaDbDestino, dbOrigem.name), overwrite = true)
+//
+//        imagensOrigem.walkTopDown().filter { it.isFile }.forEach { arquivo ->
+//            val destinoRelativo = arquivo.relativeTo(imagensOrigem)
+//            val destinoFinal = File(pastaImagensDestino, destinoRelativo.path)
+//            destinoFinal.parentFile.mkdirs()
+//            arquivo.copyTo(destinoFinal, overwrite = true)
+//        }
+//
+//        val dbCopiado = File(pastaDbDestino, dbOrigem.name).exists()
+//        val imagensCopiadas = pastaImagensDestino.listFiles()?.isNotEmpty() == true
+//
+//        println("Banco de dados: ${if (dbCopiado) "copiado com sucesso." else "falhou."}")
+//        println("Imagens: ${if (imagensCopiadas) "copiadas com sucesso." else "falharam."}")
+//
+//        if (!dbCopiado || !imagensCopiadas) throw GradleException("Falha na cópia dos dados. Verifique os arquivos e permissões.")
+//    }
+//}
+//
+//tasks.named("preBuild") {
+//    dependsOn(copiarDadosParaAssets)
+//}

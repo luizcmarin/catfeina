@@ -1,7 +1,5 @@
 /*
  * Arquivo: com.marin.catfeina.navigation.AppNavigation.kt
- * @project Catfeina
- * @description
  * Define as rotas de navegação, os destinos (telas placeholder e funcionais)
  * e a configuração do NavHost para o aplicativo Catfeina.
  */
@@ -21,19 +19,19 @@ object AppDestinations {
     const val POESIAS_ROUTE = "poesias"
     const val PERSONAGEM_ROUTE = "personagem"
 
-    // Novas rotas para DETALHES do informativo
-    const val INFORMATIVO_DETALHE_ROUTE_BASE = "informativo_detalhe"
-    const val INFORMATIVO_ARG_CHAVE = "chaveInformativo" // Deve corresponder ao usado no InformativoViewModel
-    // Template da rota: informativo_detalhe/{chaveInformativo}
-    const val INFORMATIVO_DETALHE_ROUTE_TEMPLATE = "$INFORMATIVO_DETALHE_ROUTE_BASE/{$INFORMATIVO_ARG_CHAVE}"
+    // Novas rotas para DETALHES do Texto
+    const val Texto_DETALHE_ROUTE_BASE = "Texto_detalhe"
+    const val Texto_ARG_CHAVE = "chaveTexto" // Deve corresponder ao usado no TextoViewModel
+    // Template da rota: Texto_detalhe/{chaveTexto}
+    const val Texto_DETALHE_ROUTE_TEMPLATE = "$Texto_DETALHE_ROUTE_BASE/{$Texto_ARG_CHAVE}"
 
     const val CHAVE_POLITICA_DE_PRIVACIDADE = "politica-de-privacidade"
     const val CHAVE_TERMOS_DE_USO = "termos-de-uso"
 
-    const val PREFERENCIAS_ROUTE = "preferencias"
+    const val PREFERENCIAS_ROUTE = "Preferencias"
 
     // Função auxiliar para construir a rota de detalhes com a chave
-    fun informativoDetalheComChave(chave: String) = "$INFORMATIVO_DETALHE_ROUTE_BASE/$chave"
+    fun TextoDetalheComChave(chave: String) = "$Texto_DETALHE_ROUTE_BASE/$chave"
 }
 
 @Composable

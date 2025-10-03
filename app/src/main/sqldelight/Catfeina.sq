@@ -1,0 +1,145 @@
+import java.time.LocalDateTime;
+import kotlin.Boolean;
+import kotlin.collections.List;
+
+-- ===================
+-- POESIA E RELACIONADOS
+-- ===================
+
+CREATE TABLE Poesia (
+    id TEXT NOT NULL PRIMARY KEY,
+    titulo TEXT NOT NULL,
+    conteudoInicial TEXT,
+    conteudo TEXT NOT NULL,
+    conteudoFinal TEXT,
+    imagem TEXT,
+    autor TEXT,
+    categoriaNome TEXT,
+    dataPublicacao TEXT AS LocalDateTime,
+    notaAutor TEXT
+);
+CREATE INDEX idx_poesia_titulo ON Poesia(titulo);
+CREATE INDEX idx_poesia_categoria ON Poesia(categoriaNome);
+
+-- Queries para a tabela Poesia
+selectAllPoesias:
+SELECT * FROM Poesia ORDER BY titulo;
+
+selectPoesiaById:
+SELECT * FROM Poesia WHERE id = ":id";
+
+-- "Upsert" insere uma nova poesia ou substitui uma existente com o mesmo 'id'.
+-- Ideal para a carga inicial de dados a partir dos assets.
+upsertPoesia:
+INSERT OR REPLACE INTO Poesia(id, titulo, conteudoInicial, conteudo, conteudoFinal, imagem, autor, categoriaNome, dataPublicacao, notaAutor)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+--------------------------------------------------------------------------------
+
+CREATE TABLE PoesiaUsuarioEstado (
+    poesiaId TEXT NOT NULL PRIMARY KEY,
+    favorito INTEGER AS Boolean DEFAULT 0,
+    lido INTEGER AS Boolean DEFAULT 0,
+    avaliacao INTEGER,
+    anotacao TEXT,
+    dataUltimaLeitura TEXT AS LocalDateTime
+);
+
+-- Queries para a tabela PoesiaUsuarioEstado
+selectEstadoByPoesiaId:
+SELECT * FROM PoesiaUsuarioEstado WHERE poesiaId = ":poesiaId";
+
+-- Atualiza ou insere o estado de uma poesia.
+upsertPoesiaEstado:
+INSERT OR REPLACE INTO PoesiaUsuarioEstado(poesiaId, favorito, lido, dataUltimaLeitura, avaliacao, anotacao)
+VALUES (?, ?, ?, ?, ?, ?);
+
+-- Query combinada para obter todas as poesias com o seu estado de usuário
+selectAllPoesiasWithEstado:
+SELECT
+    P.*,
+    PUE.favorito,
+    PUE.lido,
+    PUE.avaliacao,
+    PUE.anotacao
+FROM Poesia AS P
+LEFT JOIN PoesiaUsuarioEstado AS PUE ON P.id = PUE.poesiaId
+ORDER BY P.titulo;
+
+--------------------------------------------------------------------------------
+
+CREATE TABLE CategoriaPoesia (
+    nome TEXT NOT NULL PRIMARY KEY,
+    descricao TEXT
+);
+
+-- Queries para a tabela CategoriaPoesia
+selectAllCategorias:
+SELECT * FROM CategoriaPoesia ORDER BY nome;
+
+upsertCategoria:
+INSERT OR REPLACE INTO CategoriaPoesia(nome, descricao) VALUES (?, ?);
+
+-- ===================
+-- PERSONAGEM
+-- ===================
+
+CREATE TABLE Personagem (
+    nome TEXT NOT NULL PRIMARY KEY,
+    biografia TEXT,
+    fotoPrincipal TEXT,
+    fotosAdicionais TEXT AS List
+);
+
+-- Queries para a tabela Personagem
+selectAllPersonagens:
+SELECT * FROM Personagem ORDER BY nome;
+
+selectPersonagemByNome:
+SELECT * FROM Personagem WHERE nome = ":nome";
+
+upsertPersonagem:
+INSERT OR REPLACE INTO Personagem(nome, biografia, fotoPrincipal, fotosAdicionais) VALUES (?, ?, ?, ?);
+
+-- ===================
+-- OUTRAS TABELAS
+-- ===================
+
+CREATE TABLE TextoGeral (
+    slug TEXT NOT NULL PRIMARY KEY,
+    titulo TEXT NOT NULL,
+    conteudo TEXT NOT NULL
+);
+
+-- Queries para a tabela TextoGeral
+selectTextoGeralBySlug:
+SELECT * FROM TextoGeral WHERE slug = ":slug";
+
+upsertTextoGeral:
+INSERT OR REPLACE INTO TextoGeral(slug, titulo, conteudo) VALUES (?, ?, ?);
+
+--------------------------------------------------------------------------------
+
+CREATE TABLE AtelieItem (
+    id TEXT NOT NULL PRIMARY KEY,
+    titulo TEXT NOT NULL,
+    conteudo TEXT,
+    tipoItem TEXT NOT NULL,
+    dataCriacao TEXT AS LocalDateTime NOT NULL,
+    dataModificacao TEXT AS LocalDateTime NOT NULL
+);
+
+-- Queries para a tabela AtelieItem
+selectAllAtelieItems:
+SELECT * FROM AtelieItem ORDER BY dataModificacao DESC;
+
+selectAtelieItemById:
+SELECT * FROM AtelieItem WHERE id = :id;
+
+upsertAtelieItem:
+INSERT OR REPLACE INTO AtelieItem(id, titulo, conteudo, tipoItem, dataCriacao, dataModificacao)
+VALUES (?, ?, ?, ?, ?, ?);
+
+deleteAtelieItemById:
+DELETE FROM AtelieItem WHERE id = ":id";
+
