@@ -4,12 +4,13 @@
 // =============================================================================
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.sqldelight)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -23,7 +24,6 @@ android {
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
 
-        buildConfigField("boolean", "ROOM_EXPORT_SCHEMA", "true")
         buildConfigField("int", "VERSION_CODE", libs.versions.versionCode.get())
         buildConfigField("String", "VERSION_NAME", "\"${libs.versions.versionName.get()}\"")
     }
@@ -35,7 +35,6 @@ android {
         }
         release {
             isMinifyEnabled = true
-            buildConfigField("boolean", "ROOM_EXPORT_SCHEMA", "false")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -51,12 +50,6 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
-            freeCompilerArgs.addAll(
-                listOf(
-                    "-opt-in=kotlin.RequiresOptIn",
-                    "-Xannotation-default-target=param-property"
-                )
-            )
         }
     }
 
@@ -66,44 +59,62 @@ android {
     }
 
     packaging {
-        resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        jniLibs.keepDebugSymbols += listOf(
-            "**/libandroidx.graphics.path.so",
-            "**/libdatastore_shared_counter.so"
-        )
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/versions/9/previous-compilation-data.bin"
+        }
+        jniLibs {
+            useLegacyPackaging = true
+            excludes += "lib/armeabi/libjnidispatch.so"
+            jniLibs.keepDebugSymbols.addAll(
+                listOf(
+                    "**/*libc++_shared.so",
+                    "**/*libdatastore_shared_counter.so",
+                    "**/*librive-android.so",
+                    "**/*libandroidx.graphics.path.so"
+                )
+            )
+        }
     }
 
     lint {
         enable.add("DuplicateStrings")
-        // Gera o relatório em formato SARIF
         sarifReport = true
         abortOnError = false
         checkReleaseBuilds = true
         warningsAsErrors = false
     }
-
 }
 
 dependencies {
+    // Bundles definidos no libs.versions.toml
     implementation(libs.bundles.core)
+    implementation(libs.bundles.data)
+    implementation(libs.bundles.navigation)
+
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.timber)
-    implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.datastore.core)
+    implementation(libs.bundles.compose.ui)
+    debugImplementation(libs.androidx.compose.ui.tooling) // ui-tooling apenas para debug
+
+    // Bibliotecas individuais
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.rive.android)
+
+    // Injeção de Dependência (Hilt)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // JSON Parser (Moshi)
+    ksp(libs.moshi.codegen)
+
+    ksp(libs.androidx.room.compiler)
+
 }
-
-sqldelight {
-    databases {
-        create("Database") {
-            packageName.set("com.marin")
-        }
-    }
-}
-
-
 
 // =============================================================================
-// Tarefas: Abertura automática de relatórios Lint
+// Tarefas: Abertura automática de relatórios Lint (Mantidas como estavam)
 // =============================================================================
 
 fun abrirRelatorioLint(path: String) {
@@ -114,7 +125,8 @@ fun abrirRelatorioLint(path: String) {
         os.contains("nix") || os.contains("nux") || os.contains("aix") -> arrayOf("xdg-open", path)
         else -> null
     }
-    comando?.let { Runtime.getRuntime().exec(it) } ?: println("SO não suportado para abrir relatório.")
+    comando?.let { Runtime.getRuntime().exec(it) }
+        ?: println("SO não suportado para abrir relatório.")
 }
 
 tasks.register("openDebugLintReport") {
@@ -148,6 +160,7 @@ project.afterEvaluate {
         tasks.findByName(it)
     }?.finalizedBy(tasks.named("openReleaseLintReport"))
 }
+
 
 //
 //val copiarDadosParaAssets = tasks.register("copiarDadosParaAssets") {

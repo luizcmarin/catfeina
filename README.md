@@ -51,7 +51,6 @@ universo de conteúdo poético enriquecido visualmente e com formatação rica.
     * [Rive](https://rive.app/)
     * Animações nativas do Jetpack Compose.
 * **Imagens:** [Coil](https://coil-kt.github.io/coil/).
-* **Linting:** `ktlint`.
 
 ## 🚀 Como Começar (Build & Run)
 

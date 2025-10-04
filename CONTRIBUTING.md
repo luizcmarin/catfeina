@@ -61,7 +61,7 @@ no arquivo [README.md](https://github.com/luizcmarin/Catfeina/blob/main/README.m
 Após ter sua funcionalidade ou correção implementada em um branch separado:
 
 1. **Siga os Padrões de Codificação:** Certifique-se de que seu código adere aos padrões descritos
-   abaixo. Execute as tarefas do `ktlint` para formatar e verificar seu código.
+   abaixo. 
 2. **Adicione Testes:** (Nota: Atualmente, os testes não são o foco principal, mas se incluídos,
    devem seguir as boas práticas).
     * Novas funcionalidades devem vir acompanhadas de testes (unitários e/ou de instrumentação).
@@ -94,11 +94,7 @@ favor, adote estas diretrizes:
 * **Estilo de Código e Formatação:**
     * Siga as diretrizes de estilo oficiais
       do [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html).
-    * Utilize o formatador `ktlint` configurado no projeto. Configure seu editor (Android Studio,
-      IntelliJ) para usar o estilo de código oficial do Kotlin.
-    * Execute `./gradlew ktlintFormat` para formatar e `./gradlew ktlintCheck` para verificar o
-      código antes de submetê-lo.
-
+    
 * **Nomeclatura:**
     * **Classes, Enums, Interfaces:** Use `UpperCamelCase`.
     * **Funções, Propriedades e Variáveis Locais:** Use `lowerCamelCase`.

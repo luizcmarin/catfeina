@@ -58,7 +58,6 @@ A aplicação será construída sobre as seguintes tecnologias e princípios:
 * **2.5. Bibliotecas de Suporte:**
     * **Imagens:** **Coil** para carregamento eficiente e cache de imagens.
     * **Animações Vetoriais:** **Rive** para animações interativas e de alta performance.
-    * **Qualidade de Código:** **ktlint** para garantir um estilo de código consistente.
 
 ## 3. ⚠️ LEMBRETES IMPORTANTES PARA O ASSISTENTE GEMINI (Edição Kotlin) ⚠️
 
@@ -93,7 +92,7 @@ REGULARMENTE.**
   descritivo.
 * **Comentários:** Código limpo e bem nomeado deve ser autoexplicativo. Use comentários apenas para
   lógicas complexas.
-* **Formatação:** O código deve seguir as convenções garantidas pelo **ktlint**.
+* **Formatação:** O código deve seguir as convenções garantidas pela boas práticas.
 
 ### D. Formatação das Respostas (CRUCIAL!):
 
@@ -138,11 +137,7 @@ REGULARMENTE.**
     * [] Declarar `CatfeinaApplication` no `AndroidManifest.xml`.
     * [] Anotar `MainActivity.kt` com `@AndroidEntryPoint`.
 
-* [] **0.5. Configurar ktlint:**
-    * [] Adicionar o plugin `ktlint-gradle` ao `build.gradle.kts` do projeto para formatar e
-      verificar o código automaticamente.
-
-* [] **0.6. Definir Estrutura de Pacotes (Packages):**
+* [] **0.5. Definir Estrutura de Pacotes (Packages):**
     * Dentro de `com.marin.catfeina`, criar a seguinte estrutura inicial:
         * `core/`: Para código compartilhado e fundamental.
             * `core/data/`: Classes base de repositório, DataStore.
@@ -156,15 +151,15 @@ REGULARMENTE.**
             * `ui/theme/`: Gerado pelo Android Studio (`Color.kt`, `Theme.kt`, `Type.kt`).
             * `ui/composables/`: Widgets reutilizáveis (ex: `FormattedTextRenderer.kt`).
 
-* [] **0.7. Limpar e Preparar `MainActivity.kt`:**
+* [] **0.6. Limpar e Preparar `MainActivity.kt`:**
     * [] Limpar o conteúdo padrão gerado pelo template.
     * [] Manter a estrutura básica com `setContent`, `CatfeinaTheme`, e um `Scaffold` inicial. O
       roteiro detalhará seu conteúdo posteriormente.
 
-* [] **0.8. Critério de Conclusão Fase 0:**
+* [] **0.7. Critério de Conclusão Fase 0:**
     * Projeto compila e executa em um emulador/dispositivo.
     * `libs.versions.toml` está configurado e todas as dependências principais estão adicionadas.
-    * Hilt e ktlint estão configurados e funcionando.
+    * Hilt está configurado e funcionando.
     * A estrutura de pacotes base está criada.
 
 ## Fase 1: Camada de Dados Fundamental e Preferências do Usuário
@@ -697,8 +692,7 @@ REGULARMENTE.**
     * [] Realize uma passagem completa por todo o código do projeto. Verifique a aderência aos
       princípios da Arquitetura Limpa, consistência no uso de ViewModels, Repositórios e Módulos
       Hilt.
-    * [] Garanta que o `ktlint` está sendo aplicado e que não há alertas pendentes, assegurando um
-      código limpo e padronizado.
+    * [] Garanta que não há alertas pendentes, assegurando um código limpo e padronizado.
     * [] Verifique se todos os recursos (strings, cores, dimensões) estão definidos em arquivos de
       recursos (`res/values`) e não "hardcoded" no código.
 

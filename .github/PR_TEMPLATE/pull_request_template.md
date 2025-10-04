@@ -32,7 +32,6 @@ Se este PR resolve uma issue existente, adicione "Closes #123" ou "Fixes #123" a
 
 - [ ] Eu li e concordo com o [Guia de Contribuição](https://github.com/luizcmarin/Catfeina/blob/main/CONTRIBUTING.md).
 - [ ] Meu código segue os padrões de estilo e as convenções do Kotlin definidas para este projeto.
-- [ ] Eu executei `./gradlew ktlintCheck` e não há erros de formatação no meu código.
 - [ ] Eu executei `./gradlew build` e o projeto compila sem erros.
 - [ ] A minha alteração não introduz novos warnings de compilação.
 - [ ] Eu adicionei ou atualizei a documentação (KDoc) relevante para as minhas alterações (se aplicável).
