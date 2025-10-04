@@ -1,13 +1,21 @@
-/*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.TextoFormatadoRenderer.kt
- * @project Catfeina
- * @description
- * Contém o Composable reutilizável para renderizar uma lista de ElementoConteudo,
- * convertendo-os em componentes visuais formatados.
- */
-package com.marin.catfeina.ui.componentes.textoformatado
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.TextoFormatadoRenderer.kt
+//
+// Descrição: Composable responsável por renderizar uma lista de `ElementoConteudo`
+//            na interface do usuário (UI), traduzindo a estrutura lógica do texto
+//            em componentes visuais do Jetpack Compose.
+//
+// Propósito:
+// Este arquivo é o coração da camada de apresentação de texto formatado. Ele contém
+// a lógica para desenhar parágrafos, cabeçalhos, imagens, citações e outros
+// elementos. O `RenderizarElementoConteudo` itera sobre os dados processados
+// pelo `ParserTextoFormatado` e aplica os estilos, anotações de link e
+// interações (como tooltips) correspondentes, garantindo que o texto seja
+// exibido de forma rica e interativa.
+// ===================================================================================
 
-// Imports necessários para RenderizarElementoConteudo
+package com.marin.catfeina.core.utils.formatador
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -34,10 +42,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.marin.catfeina.R // Certifique-se que seus drawables de placeholder/erro estão aqui
+import com.marin.catfeina.R
 
 @Composable
-fun RenderizarElementoConteudo( // Removido 'private'
+fun RenderizarElementoConteudo(
     elemento: ElementoConteudo,
     fontSize: TextUnit,
     tooltipHandler: TooltipHandler, // Alterado para a interface

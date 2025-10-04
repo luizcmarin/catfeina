@@ -37,6 +37,7 @@ rive = "10.4.4"
 
 # Testes (Mantendo as versões para o futuro, mas não serão usados agora)
 junit = "4.13.2"
+startupRuntime = "1.2.0"
 
 [libraries]
 # ---------- CORE E LIFECYCLE ----------
@@ -80,6 +81,7 @@ rive-android = { module = "app.rive:rive-android", version.ref = "rive" }
 
 # ---------- TESTES ----------
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "startupRuntime" }
 
 
 [plugins]

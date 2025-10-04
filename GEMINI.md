@@ -44,8 +44,9 @@ A aplicação será construída sobre as seguintes tecnologias e princípios:
       plano e fluxos de dados reativos.
 
 * **2.3. Camada de Dados:**
-    * **Fonte de Dados Local:** **SQLDelight** como a fonte única da verdade (Single Source of
-      Truth), proporcionando segurança de tipos em tempo de compilação a partir de queries SQL.
+    * **Fonte de Dados Local:** **Room** como a fonte única da verdade (Single Source of
+      Truth), proporcionando uma camada de abstração sobre o SQLite com verificação de queries em
+      tempo de compilação.
     * **Preferências do Usuário:** **Jetpack DataStore (Preferences)** para armazenar configurações
       simples do usuário de forma assíncrona.
     * **Análise de JSON (Assets):** **Moshi** para analisar os dados iniciais (poesias, etc.) de
@@ -108,20 +109,19 @@ REGULARMENTE.**
 
 ## Fase 0: Configuração do Projeto e Arquitetura Fundamental
 
-*   [X] **0.1. Criar novo projeto Android:**
+* [] **0.1. Criar novo projeto Android:**
     * Usar o Android Studio, template "Empty Activity" (com Jetpack Compose).
     * Definir nome "Catfeina" e package name `com.marin.catfeina`.
 
 * [] **0.2. Configurar `libs.versions.toml`:**
     * Migrar todas as dependências do `build.gradle.kts` para o arquivo `gradle/libs.versions.toml`
       para gerenciamento centralizado de versões.
-    * Definir aliases para todas as bibliotecas que serão usadas (Hilt, SQLDelight, Coil, Rive,
+    * Definir aliases para todas as bibliotecas que serão usadas (Hilt, Room, Coil, Rive,
       etc.).
 
 * [] **0.3. Adicionar Dependências Principais (via `libs.versions.toml`):**
     * **Hilt:** `hilt-android`, `hilt-android-compiler`, `hilt-navigation-compose`.
-    * **SQLDelight:** `sqldelight-android-driver`, `sqldelight-coroutines-extensions`, e o plugin
-      `sqldelight-gradle-plugin`.
+    * **Room:** `room-runtime`, `room-ktx`, e o processador de anotações `room-compiler`.
     * **Jetpack:** `navigation-compose`, `datastore-preferences`, `lifecycle-viewmodel-compose`,
       `lifecycle-runtime-ktx`.
     * **Moshi:** `moshi-kotlin`.
@@ -129,7 +129,7 @@ REGULARMENTE.**
     * **Rive:** `rive-android`.
     * **Testes:** remover tudo relacionado a testes, pois não serão usados.
 
-* [] **0.4. Configurar Hilt:**
+* [x] **0.4. Configurar Hilt:**
     * [] Adicionar os plugins do Hilt nos arquivos `build.gradle.kts` (nível de projeto e de módulo
       `app`).
     * [] Criar a classe `CatfeinaApplication.kt` no caminho
@@ -164,25 +164,20 @@ REGULARMENTE.**
 
 ## Fase 1: Camada de Dados Fundamental e Preferências do Usuário
 
-* [] **1.1. Definir o Schema do Banco de Dados com SQLDelight:**
-    * [] No caminho `app/src/main/sqldelight/`, criar o arquivo único `Catfeina.sq`.
-    * [] Dentro do arquivo, definir as seguintes tabelas com seus tipos customizados (ex:
-      `LocalDateTime`, `List`, `Boolean`):
-        * `Poesia`: Para os dados estáticos das poesias.
-        * `PoesiaUsuarioEstado`: Para os dados do usuário (favorito, lido, avaliação, anotação).
-        * `CategoriaPoesia`: Para as categorias das poesias.
-        * `Personagem`: Para os dados dos personagens.
-        * `TextoGeral`: Para textos de apoio do app (sobre, etc.).
-        * `AtelieItem`: Para itens criados pelo usuário.
-    * [] Adicionar queries `CREATE INDEX` para otimizar buscas nas colunas `Poesia(titulo)` e
-      `Poesia(categoriaNome)`.
-    * [] Para cada tabela, definir as queries de acesso necessárias, como:
-        * `selectAll...`, `select...ById`, `select...ByNome`.
-        * `upsert...`: Usar `INSERT OR REPLACE` para inserir ou atualizar registros, facilitando a
-          carga de dados inicial e as atualizações de estado do usuário.
-        * `delete...ById`: Para a tabela `AtelieItem`.
-        * `selectAllPoesiasWithEstado`: Query com `LEFT JOIN` para buscar as poesias já com seu
-          estado de usuário.
+* [] **1.1. Definir as Entidades e DAOs do Banco de Dados com Room:**
+    * [] No pacote `core/data/`, crie subpacotes `entities/` e `daos/`.
+    * [] No pacote `entities/`, defina as classes de dados para cada tabela, anotando-as com
+      `@Entity`. Use `@PrimaryKey`, `@ColumnInfo`, `@TypeConverters`, etc., conforme necessário.
+        * `PoesiaEntity`, `PoesiaUsuarioEstadoEntity`, `CategoriaPoesiaEntity`, `PersonagemEntity`,
+          `TextoGeralEntity`, `AtelieItemEntity`.
+    * [] No pacote `daos/`, crie as interfaces para cada DAO (Data Access Object), anotando-as com
+      `@Dao`.
+    * [] Dentro das interfaces DAO, defina as funções de acesso ao banco com anotações como
+      `@Query`,
+      `@Insert`, `@Upsert`, `@Delete`.
+        * Use `Flow<List<...>>` como tipo de retorno para queries que precisam ser reativas.
+        * Crie a query `selectAllPoesiasWithEstado` com `LEFT JOIN` para buscar as poesias já com
+          seu estado de usuário.
 
 * [] **1.2. Implementar a Carga Inicial de Dados:**
     * [] Crie a pasta `app/src/main/assets/data/`.
@@ -193,15 +188,18 @@ REGULARMENTE.**
 
 * [] **1.3. Configurar Injeção de Dependência para a Camada de Dados:**
     * [] No pacote `core/di/`, crie o `DataModule.kt`.
-    * [] Dentro deste módulo, crie uma função `@Provides @Singleton` para fornecer o `SqlDriver`.
-    * [] Crie outra função `@Provides @Singleton` que depende do `SqlDriver` para fornecer a
-      instância do `Database` (gerada pelo SQLDelight).
-        * Nesta função, use o parâmetro `schema.create` para implementar o callback de primeira
-          criação do banco. A lógica dentro deste callback será responsável por ler os arquivos JSON
-          da pasta `assets` (usando Moshi), converter para os modelos de dados e inserir no banco
-          usando as funções geradas pelo SQLDelight.
-
-.
+    * [] Crie uma classe `DatabaseCallback.kt` que implementa `RoomDatabase.Callback`. No método
+      `onCreate`, coloque a lógica para ler os arquivos JSON da pasta `assets` (usando Moshi),
+      converter para os modelos de entidade e inserir no banco usando os DAOs. Injete as
+      dependências necessárias (Contexto, Moshi, DAOs via Provider) nesta classe.
+    * [] No `DataModule.kt`, crie uma função `@Provides @Singleton` para fornecer a instância do
+      `AppDatabase`.
+        * Esta função receberá o `Contexto` e o `DatabaseCallback` via Hilt.
+        * Use `Room.databaseBuilder(...)` para construir o banco, e chame `.addCallback(...)`
+          passando a instância do `DatabaseCallback`.
+    * [] No `DataModule.kt`, crie funções `@Provides` para fornecer cada DAO a partir da instância
+      do
+      `AppDatabase` (ex: `database.poesiaDao()`).
 
 * [] **1.4. Configurar Preferências do Usuário com DataStore:**
     * [] No pacote `core/data/`, crie uma classe `UserPreferencesRepository.kt`.
@@ -215,19 +213,19 @@ REGULARMENTE.**
     * [] Para cada feature principal (ex: `poesias`), crie a interface do repositório no pacote da
       feature, ex: `features/poesias/data/PoesiaRepository.kt`.
     * [] Crie a implementação concreta, ex: `features/poesias/data/PoesiaRepositoryImpl.kt`.
-    * [] A implementação (`PoesiaRepositoryImpl`) receberá a instância do `Database` (gerada pelo
-      SQLDelight) via injeção de dependência no seu construtor.
-    * [] Implemente os métodos do repositório, que chamarão as funções geradas pelo SQLDelight (ex:
-      `database.poesiaQueries.selectAll()`). Use a extensão `.asFlow().mapToList()` para expor
-      listas reativas.
+    * [] A implementação (`PoesiaRepositoryImpl`) receberá o(s) DAO(s) necessário(s) via injeção
+      de dependência no seu construtor.
+    * [] Implemente os métodos do repositório, que chamarão as funções do DAO (ex:
+      `poesiaDao.selectAllPoesiasWithEstado()`). O DAO já retornará um `Flow`, que o repositório
+      simplesmente repassará.
     * [] Crie um módulo Hilt `RepositoryModule.kt` em `core/di/` para prover as implementações dos
       repositórios.
 
 * [] **1.6. Critério de Conclusão Fase 1:**
-    * O schema do banco de dados está definido nos arquivos `.sq`.
-    * Hilt consegue injetar com sucesso a instância do `Database` e dos `Repositories`.
-    * Na primeira inicialização do app, os dados dos arquivos JSON são lidos e populam o banco de
-      dados SQLDelight.
+    * As entidades e DAOs do Room estão definidos e compilam.
+    * Hilt consegue injetar com sucesso a instância do `AppDatabase`, dos DAOs e dos `Repositories`.
+    * Na primeira inicialização do app, os dados dos arquivos JSON são lidos e populados no banco
+      de dados Room através do `DatabaseCallback`.
     * O `UserPreferencesRepository` está funcional, permitindo ler e escrever preferências usando
       DataStore.
     * As camadas de dados estão prontas para serem consumidas pelos ViewModels nas próximas fases.
@@ -277,7 +275,7 @@ REGULARMENTE.**
 
 * [] **2.3. Desenvolver a Tela de Textos Gerais (Sobre, Termos, etc.):**
     * [] **2.3.1. Dados:** Garanta que os textos (sobre, termos de uso) estejam no banco de dados,
-      carregados na Fase 1 a partir de um JSON. Crie as queries necessárias no SQLDelight para
+      carregados na Fase 1 a partir de um JSON. Crie as queries necessárias no Room para
       buscar um texto por uma chave/ID única.
     * [] **2.3.2. ViewModel:**
         * [] Crie um `TextoGeralViewModel.kt`. Ele receberá o ID do texto a ser exibido (via
@@ -315,17 +313,17 @@ REGULARMENTE.**
 ## Fase 3: Feature Principal - Poesias (Listagem, Detalhes, Interações)
 
 * [] **3.1. Definir Modelos de Dados e Queries Adicionais:**
-    * [] **Modelos de Estado do Usuário:** No SQLDelight, crie as tabelas para armazenar o estado
-      que o usuário gera.
-        * `PoesiaUsuarioEstado.sq`:
-          `CREATE TABLE PoesiaUsuarioEstado (poesiaId INTEGER NOT NULL PRIMARY KEY, ehFavorita INTEGER AS Boolean DEFAULT 0, foiLida INTEGER AS Boolean DEFAULT 0);`
-        * `AnotacaoPoesia.sq`:
-          `CREATE TABLE AnotacaoPoesia (poesiaId INTEGER NOT NULL PRIMARY KEY, textoAnotacao TEXT NOT NULL, dataAtualizado INTEGER NOT NULL);`
-    * [] **Queries de Junção (Join):** No arquivo `Poesia.sq`, crie queries que juntem a tabela
-      `Poesia` com `PoesiaUsuarioEstado` para obter uma visão combinada dos dados. Isso evita
-      múltiplas chamadas ao banco.
-        * Ex:
-          `selectAllWithEstado: SELECT P.*, PUE.ehFavorita, PUE.foiLida FROM Poesia AS P LEFT JOIN PoesiaUsuarioEstado AS PUE ON P.id = PUE.poesiaId;`
+    * [] **Modelos de Estado do Usuário:** Certifique-se de que as entidades para armazenar o estado
+      gerado pelo usuário foram definidas na Fase 1.
+        * `PoesiaUsuarioEstadoEntity`: `poesiaId` (chave primária/estrangeira), `ehFavorita`,
+          `foiLida`.
+        * `AnotacaoPoesiaEntity`: `poesiaId` (chave primária/estrangeira), `textoAnotacao`,
+          `dataAtualizado`.
+    * [] **Queries de Junção (Join):** No DAO correspondente (`PoesiaDao.kt`), certifique-se de que
+      a query que busca a lista de poesias já faz a junção com `PoesiaUsuarioEstadoEntity`.
+        * O retorno deve ser um modelo de dados combinado (uma `data class` com `@Embedded`)
+          para encapsular a poesia e seu estado. Ex:
+          `@Query("SELECT * FROM poesias LEFT JOIN poesias_usuario_estado ON poesias.id = poesias_usuario_estado.poesiaId") fun getPoesiasComEstado(): Flow<List<PoesiaComEstado>>`
 
 * [] **3.2. Estender a Camada de Dados:**
     * [] **Repositório:** No `PoesiaRepository.kt` e sua implementação, adicione os métodos para
@@ -462,17 +460,21 @@ REGULARMENTE.**
       Marcadores, Ateliê), gerenciando a navegação com o `navController`.
     * [] **NavigationDrawer:** Conterá a `SettingsScreen` (desenvolvida na Fase 2) e outros links
       para seções menos frequentes (ex: Sobre, Termos de Uso).
-
 * [] **5.3. Implementar a Funcionalidade de Pesquisa Global:**
     * [] **5.3.1. Camada de Dados:**
-        * [] No `SearchRepository.kt`, implemente um método `search(query: String)` que consulta
-          múltiplos repositórios (`PoesiaRepository`, `PersonagemRepository`, etc.).
-        * [] Use queries `LIKE '%query%'` no SQLDelight para buscar em títulos e conteúdos.
-        * [] Combine os resultados em um único `Flow<List<SearchResult>>`.
+        * [] Crie uma nova interface `SearchDao.kt` em `core/data/daos/` e adicione-a ao
+          `AppDatabase`.
+        * [] No `SearchDao.kt`, crie métodos `suspend` para pesquisar em cada tabela relevante (ex:
+          poesias, personagens) usando queries com `LIKE :query`. Ex:
+          `@Query("SELECT * FROM poesias WHERE titulo LIKE :query OR texto LIKE :query") suspend fun searchPoesias(query: String): List<PoesiaEntity>`
+        * [] Crie um `SearchRepository.kt` que recebe os DAOs necessários. Nele, implemente um
+          método `search(query: String)` que chama os métodos de busca dos DAOs de forma
+          concorrente (usando `coroutineScope` e `async`) e combina os resultados em uma lista
+          unificada (ex: `Flow<List<SearchResult>>`).
     * [] **5.3.2. ViewModel e UI:**
         * [] Crie `SearchViewModel.kt` que usa o `SearchRepository`.
-        * [] Crie `SearchScreen.kt` com um `TextField` para a busca. Conforme o usuário digita, o
-          ViewModel executa a pesquisa.
+        * [] Crie `SearchScreen.kt` com um `TextField` para a busca. Conforme o usuário digita (com
+          um `debounce` para evitar buscas excessivas), o ViewModel executa a pesquisa.
         * [] Exiba os resultados em uma `LazyColumn`. O clique em um resultado navega para a tela de
           detalhe apropriada.
 
@@ -554,7 +556,7 @@ REGULARMENTE.**
       Google Drive ou GitHub) como fonte dos dados.
     * [] **Lógica de Sincronização:** Crie um `RemoteDataSource` usando uma biblioteca como **Ktor**
       ou **Retrofit**. No repositório, implemente a lógica para buscar dados remotos, comparar com
-      os locais (usando versões ou timestamps) e atualizar o banco de dados SQLDelight.
+      os locais (usando versões ou timestamps) e atualizar o banco de dados Room.
     * [] **Trabalho em Background:** Use o **WorkManager** do Android para agendar verificações
       periódicas de atualização de conteúdo.
 
@@ -571,7 +573,7 @@ REGULARMENTE.**
     * [] **Lógica:** Crie um `ConquistasService` que observa as ações do usuário (poesias lidas,
       notas criadas).
     * [] **Dados:** Armazene o progresso e as conquistas desbloqueadas no DataStore ou em uma nova
-      tabela SQLDelight.
+      tabela Room.
     * [] **UI:** Crie uma `ConquistasScreen` para listar as conquistas. Ao desbloquear uma, mostre
       uma animação do Catshito (Rive) como celebração.
 
@@ -699,7 +701,7 @@ REGULARMENTE.**
 * [] **9.2. Atualizar Documentação do Projeto:**
     * [] **README.md:** Crie ou atualize o arquivo `README.md` na raiz do projeto. Ele deve conter:
         * Uma breve descrição do Catfeina.
-        * A pilha tecnológica utilizada (Kotlin, Compose, Hilt, SQLDelight, etc.).
+        * A pilha tecnológica utilizada (Kotlin, Compose, Hilt, Room, etc.).
         * Instruções de como compilar e rodar o projeto.
     * [] **Atualizar `GEMINI.md`:** Marque todos os itens concluídos no roteiro de desenvolvimento
       com `[X]`. Revise as seções para garantir que elas reflitam o estado final do projeto MVP.

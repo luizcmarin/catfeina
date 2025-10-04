@@ -95,6 +95,7 @@ dependencies {
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose.ui)
+    implementation(libs.androidx.startup.runtime)
     debugImplementation(libs.androidx.compose.ui.tooling) // ui-tooling apenas para debug
 
     // Bibliotecas individuais

@@ -1,14 +1,20 @@
-/*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.parser.ProcessadorTag.kt
- * @project Catfeina
- * @description
- * Define a interface para processadores de tags específicas e os contextos
- * necessários para o processo de parsing do texto formatado.
- */
-package com.marin.catfeina.ui.componentes.textoformatado.parser
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorTag.kt
+//
+// Descrição: Define a interface principal e as classes de dados de suporte para o
+//            mecanismo de análise (parsing) de tags de formatação.
+//
+// Propósito:
+// Este arquivo é o pilar da arquitetura do parser. A interface `ProcessadorTag`
+// estabelece um contrato que permite a criação de processadores especializados
+// para cada tipo de tag (ex: negrito, imagem, link). O `ParserTextoFormatado`
+// utiliza uma coleção desses processadores para identificar e converter as tags
+// do texto cru nos `ElementoConteudo` ou `AplicacaoEmLinha` correspondentes.
+// ===================================================================================
+package com.marin.catfeina.core.utils.formatador.parser
 
-import com.marin.catfeina.ui.componentes.textoformatado.AplicacaoEmLinha
-import com.marin.catfeina.ui.componentes.textoformatado.ElementoConteudo
+import com.marin.catfeina.core.utils.formatador.AplicacaoEmLinha
+import com.marin.catfeina.core.utils.formatador.ElementoConteudo
 
 /**
  * Contexto fornecido a um [ProcessadorTag] durante o processamento.

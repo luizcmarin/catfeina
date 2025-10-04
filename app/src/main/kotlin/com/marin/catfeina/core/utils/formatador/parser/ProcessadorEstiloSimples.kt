@@ -1,15 +1,22 @@
-/*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.parser.ProcessadorEstiloSimples.kt
- * @project Catfeina
- * @description Processador para tags de estilo simples em linha (negrito, itálico, destaque, sublinhado)
- *              usando a sintaxe {chave|conteúdo}.
- */
-package com.marin.catfeina.ui.componentes.textoformatado.parser
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorEstiloSimples.kt
+//
+// Descrição: Processador de tag que lida com múltiplas tags de formatação de
+//            estilo em linha (negrito, itálico, sublinhado, destaque).
+//
+// Propósito:
+// Esta classe agrega a lógica para várias tags simples que resultam em uma
+// `AplicacaoSpanStyle`. Em vez de criar um arquivo para cada tag ({n|...},
+// {i|...}, etc.), este processador centraliza a conversão, tornando o sistema
+// mais conciso. Ele é registrado no `ParserModule` e converte o conteúdo da
+// tag em uma formatação que será aplicada a um trecho do parágrafo.
+// ===================================================================================
+package com.marin.catfeina.core.utils.formatador.parser
 
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import com.marin.catfeina.ui.componentes.textoformatado.AplicacaoSpanStyle // VERIFIQUE ESTE CAMINHO
+import com.marin.catfeina.core.utils.formatador.AplicacaoSpanStyle // VERIFIQUE ESTE CAMINHO
 import timber.log.Timber
 
 class ProcessadorEstiloSimples : ProcessadorTag {

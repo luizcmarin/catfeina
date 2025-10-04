@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Catfeina">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -22,6 +23,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ====================================================================== -->
+        <!--      INÍCIO DA CORREÇÃO: Configuração do AndroidX Startup Provider       -->
+        <!-- ====================================================================== -->
+        <!-- Este provider é o ponto de entrada para a biblioteca AndroidX Startup. -->
+        <!-- Ele descobre e executa todos os Initializers declarados.               -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <!-- 1. DECLARA O SEU INICIALIZADOR: -->
+            <!-- Diz ao sistema para usar a sua classe RiveInitializer. -->
+            <meta-data
+                android:name="com.marin.catfeina.core.di.RiveInitializer"
+                android:value="androidx.startup" />
+
+            <!-- 2. REMOVE O INICIALIZADOR PADRÃO DA BIBLIOTECA RIVE: -->
+            <!-- Isso previne a inicialização duplicada e remove o warning. -->
+            <!-- 'tools:node="remove"' instrui o merger do Manifest a remover -->
+            <!-- qualquer declaração que corresponda a este nome de pacote.   -->
+            <meta-data
+                android:name="app.rive.runtime.kotlin.RiveInitializer"
+                tools:node="remove" />
+
+        </provider>
+        <!-- ====================================================================== -->
+        <!--                          FIM DA CORREÇÃO                               -->
+        <!-- ====================================================================== -->
+
     </application>
 
 </manifest>

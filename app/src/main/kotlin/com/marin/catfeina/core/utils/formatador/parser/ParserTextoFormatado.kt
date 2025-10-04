@@ -1,29 +1,41 @@
 /*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.parser.ParserTextoFormatado.kt
+ * Arquivo: com.marin.catfeina.ui.componentes.formatacao.parser.ParserTextoFormatado.kt
  * @project Catfeina
  * @description
  * Parser principal responsável por converter uma string de texto cru com tags
  * customizadas (formato {chave|conteúdo} ou {chave}) em uma lista de [ElementoConteudo].
  */
-package com.marin.catfeina.ui.componentes.textoformatado.parser
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ParserTextoFormatado.kt
+//
+// Descrição: Classe principal responsável por converter uma string de texto cru,
+//            contendo tags customizadas, em uma estrutura de dados de UI.
+//
+// Propósito:
+// Este parser é o motor central do sistema de texto formatado. Ele recebe uma lista
+// de `ProcessadorTag` (injetada via Hilt) e uma string de entrada. Sua função é
+// iterar sobre o texto, identificar as tags (ex: {b|texto}, {img|...}), delegar o
+// processamento para o `ProcessadorTag` apropriado e construir uma lista ordenada
+// de `ElementoConteudo`. Esta lista é então usada pela camada de UI para
+// renderizar o texto de forma rica e interativa.
+// ===================================================================================
+package com.marin.catfeina.core.utils.formatador.parser
 
-// Certifique-se que estas importações correspondem à localização das suas classes de modelo
-// Assumindo que ElementoConteudo e AplicacaoEmLinha estão no pacote ...textoformatado
-import com.marin.catfeina.ui.componentes.textoformatado.AplicacaoEmLinha
-import com.marin.catfeina.ui.componentes.textoformatado.ElementoConteudo
+import com.marin.catfeina.core.utils.formatador.AplicacaoEmLinha
+import com.marin.catfeina.core.utils.formatador.ElementoConteudo
 // Se AplicacaoSpanStyle, AplicacaoAnotacaoLink, etc. estiverem em um subpacote ou arquivo diferente,
 // importe-os explicitamente aqui. Por exemplo:
-// import com.marin.catfeina.ui.componentes.textoformatado.model.AplicacaoSpanStyle
+// import com.marin.catfeina.ui.componentes.formatacao.model.AplicacaoSpanStyle
 
 import timber.log.Timber
 import javax.inject.Inject
 
 class ParserTextoFormatado @Inject constructor(
-    private val processadoresTag: List<ProcessadorTag> // Injetado via Hilt
+    private val processadoresTag: List<ProcessadorTag>
 ) {
 
     private val mapaProcessadores: Map<String, ProcessadorTag> by lazy {
-        Timber.d("[ParserTF] CONSTRUINDO MAPAPROCESSADORES...") // Log mais curto
+        Timber.d("[ParserTF] CONSTRUINDO MAPAPROCESSADORES...")
         Timber.d("[ParserTF] Total de ProcessadorTag recebidos: ${processadoresTag.size}")
         processadoresTag.forEachIndexed { index, proc ->
             Timber.d("[ParserTF]  > Processador[${index}]: ${proc::class.java.simpleName}, Palavras-chave originais: ${proc.palavrasChave.joinToString()}")
@@ -69,7 +81,7 @@ class ParserTextoFormatado @Inject constructor(
         val acumuladorTextoParagrafo = StringBuilder()
         val aplicacoesParaParagrafoAtual = mutableListOf<AplicacaoEmLinha>()
 
-        fun finalizarParagrafoPendenteEAdicionar() { // Renomeado para clareza
+        fun finalizarParagrafoPendenteEAdicionar() {
             if (acumuladorTextoParagrafo.isNotEmpty() || aplicacoesParaParagrafoAtual.isNotEmpty()) {
                 val textoDoParagrafo = acumuladorTextoParagrafo.toString()
                 Timber.d("[ParserTF] Finalizando Parágrafo: Texto='${textoDoParagrafo.replace("\n", "\\n")}', Aplicações=${aplicacoesParaParagrafoAtual.size}")
@@ -94,8 +106,8 @@ class ParserTextoFormatado @Inject constructor(
             val proximaTagMatch = encontrarProximaTag(textoLimpo, cursor)
 
             if (proximaTagMatch != null) {
-                val rangeTagNoTextoOriginal = proximaTagMatch.rangeNoTextoOriginal // Usando nome corrigido
-                val palavraChaveOriginalDetectada = proximaTagMatch.palavraChave // Chave como detectada na tag
+                val rangeTagNoTextoOriginal = proximaTagMatch.rangeNoTextoOriginal
+                val palavraChaveOriginalDetectada = proximaTagMatch.palavraChave
                 val conteudoInternoTag = proximaTagMatch.conteudoInterno
 
                 // Adiciona texto ANTES da tag ao acumulador do parágrafo atual
@@ -186,14 +198,14 @@ class ParserTextoFormatado @Inject constructor(
 
     // Estrutura para informações da tag encontrada
     private data class TagInfo(
-        val rangeNoTextoOriginal: IntRange, // Renomeado de 'range' para clareza
+        val rangeNoTextoOriginal: IntRange,
         val palavraChave: String,
         val conteudoInterno: String
     )
 
     // Nova encontrarProximaTag para a sintaxe {palavraChave|conteúdo} ou {palavraChave}
     private fun encontrarProximaTag(texto: String, inicioBusca: Int): TagInfo? {
-        val logPrefix = "[ParserTF][encontrarProximaTag]" // Log mais curto
+        val logPrefix = "[ParserTF][encontrarProximaTag]"
 
         val inicioTag = texto.indexOf('{', inicioBusca)
         if (inicioTag == -1) {

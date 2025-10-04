@@ -1,13 +1,20 @@
-/*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.parser.ProcessadorTooltip.kt
- * @project Catfeina
- * @description Processador para tags de tooltip (ex: ::tooltip:texto do tooltip|texto anotado::).
- */
-package com.marin.catfeina.ui.componentes.textoformatado.parser
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorTooltip.kt
+//
+// Descrição: Processador de tag especializado em converter tags de tooltip (dica)
+//            (ex: {dica|texto base|texto que aparece na dica}) em uma anotação.
+//
+// Propósito:
+// Esta classe isola a lógica para lidar com tags de tooltip. Registrada no
+// `ParserModule`, ela é invocada pelo `ParserTextoFormatado` ao encontrar a
+// palavra-chave "dica". Sua responsabilidade é extrair o texto que ficará no
+// parágrafo e o texto que será exibido no tooltip, criando uma
+// `AplicacaoAnotacaoTooltip` que o `TextoFormatadoRenderer` usará para
+// implementar a interatividade na UI.
+// ===================================================================================
+package com.marin.catfeina.core.utils.formatador.parser
 
-// import androidx.wear.compose.foundation.size // REMOVIDA - Importação incorreta
-
-import com.marin.catfeina.ui.componentes.textoformatado.AplicacaoAnotacaoTooltip
+import com.marin.catfeina.core.utils.formatador.AplicacaoAnotacaoTooltip
 import timber.log.Timber
 
 class ProcessadorTooltip : ProcessadorTag {
@@ -20,7 +27,6 @@ class ProcessadorTooltip : ProcessadorTag {
     ): ResultadoProcessamentoTag {
         Timber.d("Processando TOOLTIP: Chave='${palavraChaveTag}', Conteúdo='${conteudoTag}'")
 
-        // CORREÇÃO: Usando split com limite.
         // O resultado será uma lista. Se o delimitador não for encontrado, a lista terá um elemento.
         // Se for encontrado uma vez e o limite for 2, a lista terá dois elementos.
         val partes = conteudoTag.split("|", limit = 2)

@@ -1,15 +1,19 @@
-/*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.ElementosConteudo.kt
- * @project Catfeina
- * @description
- * Define as estruturas de dados para representar o conteúdo de texto formatado
- * após o processamento pelo parser. Inclui elementos de bloco como parágrafos,
- * cabeçalhos, imagens, e também representações para estilos e anotações em linha
- * que serão usados para construir um AnnotatedString.
- */
-package com.marin.catfeina.ui.componentes.textoformatado
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.ElementosConteudo.kt
+//
+// Descrição: Define as classes de dados e interfaces que representam a estrutura
+//            lógica de um texto formatado, após ser processado pelo parser.
+//
+// Propósito:
+// Este arquivo é fundamental para a arquitetura do parser. Ele desacopla a lógica
+// de análise da lógica de renderização. O `ParserTextoFormatado` converte o
+// texto cru em uma lista de `ElementoConteudo` (Parágrafo, Imagem, etc.).
+// O `TextoFormatadoRenderer` então consome essa lista para construir a UI em
+// Jetpack Compose, sem precisar entender a sintaxe das tags originais.
+// ===================================================================================
 
-// androidx.compose.ui.text.SpanStyle NÃO É USADO DIRETAMENTE AQUI, PODE SER REMOVIDO SE NÃO FOR USADO EM OUTRO LUGAR DESTE ARQUIVO
+package com.marin.catfeina.core.utils.formatador
+
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -18,7 +22,7 @@ import java.util.UUID
 /**
  * Representa um estilo ou anotação a ser aplicado a um trecho de texto dentro de um parágrafo.
  */
-sealed interface AplicacaoEmLinha { // <<---- idUnico REMOVIDO DESTA INTERFACE
+sealed interface AplicacaoEmLinha {
     /** O intervalo no texto original do parágrafo onde esta formatação se aplica. */
     var intervalo: IntRange
 
@@ -29,7 +33,7 @@ sealed interface AplicacaoEmLinha { // <<---- idUnico REMOVIDO DESTA INTERFACE
 /**
  * Representa a aplicação de um SpanStyle (ex: negrito, itálico, cor de fundo para destaque).
  */
-data class AplicacaoSpanStyle( // <<---- NÃO PRECISA MAIS DE idUnico
+data class AplicacaoSpanStyle(
     override val textoOriginal: String,
     override var intervalo: IntRange = IntRange.EMPTY,
     val fontWeight: FontWeight? = null,
@@ -41,32 +45,29 @@ data class AplicacaoSpanStyle( // <<---- NÃO PRECISA MAIS DE idUnico
 /**
  * Representa um link clicável a ser anotado no texto.
  */
-data class AplicacaoAnotacaoLink( // <<---- NÃO PRECISA MAIS DE idUnico
-    override var intervalo: IntRange, // Se não tiver valor padrão, o parser precisa sempre fornecer
+data class AplicacaoAnotacaoLink(
+    override var intervalo: IntRange,
     override val textoOriginal: String,
     val url: String,
-    val tagAnotacao: String = "URL_${url.hashCode()}" // Tornando a tag um pouco mais única
+    val tagAnotacao: String = "URL_${url.hashCode()}"
 ) : AplicacaoEmLinha
 
 /**
  * Representa um tooltip (dica de contexto) a ser associado a um trecho de texto.
  */
-data class AplicacaoAnotacaoTooltip( // <<---- NÃO PRECISA MAIS DE idUnico
-    override var intervalo: IntRange, // Se não tiver valor padrão, o parser precisa sempre fornecer
+data class AplicacaoAnotacaoTooltip(
+    override var intervalo: IntRange,
     override val textoOriginal: String,
     val textoTooltip: String,
-    val tagAnotacao: String = "TOOLTIP_${textoTooltip.hashCode()}" // Tornando a tag um pouco mais única
+    val tagAnotacao: String = "TOOLTIP_${textoTooltip.hashCode()}"
 ) : AplicacaoEmLinha
-
-
-// --- Elementos de Conteúdo de Bloco ---
 
 /**
  * Representa um elemento de bloco no conteúdo estruturado.
  * O parser irá converter o texto cru em uma lista de [ElementoConteudo]s.
  */
 sealed interface ElementoConteudo {
-    val idUnico: String // <<---- DEFINIDO AQUI, NA INTERFACE PAI DOS ITENS DA LAZYCOLUMN
+    val idUnico: String
 
     data class Paragrafo(
         val textoCru: String,
@@ -92,7 +93,7 @@ sealed interface ElementoConteudo {
     ) : ElementoConteudo
 
     object LinhaHorizontal : ElementoConteudo {
-        override val idUnico: String = "ELEMENTO_LINHA_HORIZONTAL_SINGLETON" // ID Fixo e único para o singleton
+        override val idUnico: String = "ELEMENTO_LINHA_HORIZONTAL_SINGLETON"
     }
 
     data class ItemLista(

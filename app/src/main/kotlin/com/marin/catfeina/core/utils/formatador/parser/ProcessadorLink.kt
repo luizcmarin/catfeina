@@ -1,12 +1,19 @@
-/*
- * Arquivo: com.marin.catfeina.ui.componentes.textoformatado.parser.ProcessadorLink.kt
- * @project Catfeina
- * @description Processador para tags de link (ex: ::link:url|texto do link::).
- */
-package com.marin.catfeina.ui.componentes.textoformatado.parser
+// ===================================================================================
+// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorLink.kt
+//
+// Descrição: Processador de tag especializado em converter tags de link/URL
+//            (ex: {link|https://exemplo.com|Clique aqui}) em uma anotação em linha.
+//
+// Propósito:
+// Esta classe isola a lógica para lidar com tags de hiperlink. Registrada no
+// `ParserModule`, ela é invocada pelo `ParserTextoFormatado` ao encontrar as
+// palavras-chave "link" ou "url". Sua responsabilidade é extrair a URL e o
+// texto do link, criando uma `AplicacaoAnotacaoLink` que será usada pelo
+// `TextoFormatadoRenderer` para criar um trecho de texto clicável na UI.
+// ===================================================================================
+package com.marin.catfeina.core.utils.formatador.parser
 
-// import androidx.wear.compose.foundation.size // REMOVIDA
-import com.marin.catfeina.ui.componentes.textoformatado.AplicacaoAnotacaoLink
+import com.marin.catfeina.core.utils.formatador.AplicacaoAnotacaoLink
 import timber.log.Timber
 
 class ProcessadorLink : ProcessadorTag {
@@ -19,7 +26,6 @@ class ProcessadorLink : ProcessadorTag {
     ): ResultadoProcessamentoTag {
         Timber.d("Processando LINK: Chave='${palavraChaveTag}', Conteúdo='${conteudoTag}'")
 
-        // CORREÇÃO: Usando split com limite.
         val partes = conteudoTag.split("|", limit = 2)
 
         if (partes.size != 2) {
