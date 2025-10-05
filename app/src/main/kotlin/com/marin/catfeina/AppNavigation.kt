@@ -20,18 +20,19 @@ object AppDestinations {
     const val PERSONAGEM_ROUTE = "personagem"
 
     // Novas rotas para DETALHES do Texto
-    const val Texto_DETALHE_ROUTE_BASE = "Texto_detalhe"
-    const val Texto_ARG_CHAVE = "chaveTexto" // Deve corresponder ao usado no TextoViewModel
+    const val TEXTO_DETALHE_ROUTE_BASE = "Texto_detalhe"
+    const val TEXTO_ARG_CHAVE = "chaveTexto" // Deve corresponder ao usado no TextoViewModel
     // Template da rota: Texto_detalhe/{chaveTexto}
-    const val Texto_DETALHE_ROUTE_TEMPLATE = "$Texto_DETALHE_ROUTE_BASE/{$Texto_ARG_CHAVE}"
+    const val TEXTO_DETALHE_ROUTE_TEMPLATE = "$TEXTO_DETALHE_ROUTE_BASE/{$TEXTO_ARG_CHAVE}"
 
     const val CHAVE_POLITICA_DE_PRIVACIDADE = "politica-de-privacidade"
     const val CHAVE_TERMOS_DE_USO = "termos-de-uso"
 
     const val PREFERENCIAS_ROUTE = "Preferencias"
+    const val TEMAS_ROUTE = "Temas"
 
     // Função auxiliar para construir a rota de detalhes com a chave
-    fun TextoDetalheComChave(chave: String) = "$Texto_DETALHE_ROUTE_BASE/$chave"
+    fun textoDetalheComChave(chave: String) = "$TEXTO_DETALHE_ROUTE_BASE/$chave"
 }
 
 @Composable

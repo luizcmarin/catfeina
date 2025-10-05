@@ -38,35 +38,42 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.marin.catfeina.core.theme.CatfeinaTheme
 import com.marin.catfeina.core.utils.Icones
+import com.marin.catfeina.ui.theme.TemasScreen
+import com.marin.catfeina.core.theme.GerenciadorTemas
 import com.marin.catfeina.ui.theme.CatfeinaTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.marin.catfeina.core.data.UserPreferencesRepository
-import com.marin.catfeina.ui.preferencias.PreferenciasScreen
-import com.marin.catfeina.ui.preferencias.PreferenciasViewModel
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var GerenciadorTemas: GerenciadorTemas
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
-            CatfeinaTheme {
+            CatfeinaTheme(GerenciadorTemas = GerenciadorTemas) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainAppScreen()
+                MainAppScreen()
                 }
             }
         }
@@ -82,35 +89,27 @@ data class NavMenuItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainAppScreen(
-) {
+fun MainAppScreen() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    // Observa a rota atual para UI (TopAppBar título, item selecionado)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Defina seus itens de navegação aqui, usando as rotas de AppDestinations
-    // e os recursos de string/ícones correspondentes.
     val navigationItems = listOf(
         NavMenuItem(AppDestinations.INICIO_ROUTE, R.string.menu_inicio, Icones.Inicio),
         NavMenuItem(AppDestinations.POESIAS_ROUTE, R.string.menu_poesias, Icones.Poesia),
         NavMenuItem(AppDestinations.PERSONAGEM_ROUTE, R.string.menu_personagem, Icones.Personagem),
-        NavMenuItem(
-            AppDestinations.PREFERENCIAS_ROUTE,
-            R.string.menu_preferencias,
-            Icones.Preferencias
-        )
-        // Adicione outros itens que estarão no Drawer
+        NavMenuItem(AppDestinations.PREFERENCIAS_ROUTE, R.string.menu_preferencias, Icones.Preferencias),
+                NavMenuItem(AppDestinations.TEMAS_ROUTE, R.string.menu_temas, Icones.Temas),
     )
 
-    // Itens que aparecerão especificamente na BottomBar (um subconjunto ou os mesmos)
     val bottomBarItems = listOf(
         navigationItems.find { it.route == AppDestinations.INICIO_ROUTE }!!,
         navigationItems.find { it.route == AppDestinations.POESIAS_ROUTE }!!,
-        navigationItems.find { it.route == AppDestinations.PREFERENCIAS_ROUTE }!!
+        navigationItems.find { it.route == AppDestinations.PREFERENCIAS_ROUTE }!!,
+        navigationItems.find { it.route == AppDestinations.TEMAS_ROUTE }!!
     )
 
     fun navigateTo(route: String) {
@@ -185,7 +184,6 @@ fun MainAppScreen(
                 )
             },
             bottomBar = {
-                // Condicionalmente mostrar BottomAppBar (ex: apenas em telas de nível superior)
                 if (bottomBarItems.any { it.route == currentRoute }) {
                     BottomAppBar(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -225,47 +223,33 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(AppDestinations.INICIO_ROUTE) {
-//            InicioScreen() // Sua tela de AppNavigation.kt
+            // Placeholder
+            Text("Tela de Início")
         }
         composable(AppDestinations.POESIAS_ROUTE) {
-//            PoesiasScreen() // Sua tela de AppNavigation.kt
+            // Placeholder
+            Text("Tela de Poesias")
         }
         composable(AppDestinations.PERSONAGEM_ROUTE) {
-//            PersonagemScreen() // Sua tela de AppNavigation.kt
+            // Placeholder
+            Text("Tela de Personagem")
         }
-
-
-        composable(AppDestinations.PREFERENCIAS_ROUTE) {
-            val context = LocalContext.current
-            val userPreferencesRepository = UserPreferencesRepository(context)
-            val viewModel: PreferenciasViewModel = viewModel(
-                factory = PreferenciasViewModel.provideFactory(userPreferencesRepository)
-            )
-
-            // Coleta o estado do Flow para a UI
-            val isDarkMode by viewModel.isDarkMode.collectAsState()
-
-            PreferenciasScreen(
-                isDarkMode = isDarkMode,
-                onDarkModeChange = { viewModel.setDarkMode(it) }
+//        composable(AppDestinations.PREFERENCIAS_ROUTE) {
+//            PreferenciasScreen(
+//                viewModel = hiltViewModel(checkNotNull(LocalViewModelStoreOwner.current) {
+//                    "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+//                }, null),
+//                onNavigateBack = { navController.popBackStack() }
+//            )
+//        }
+        composable(AppDestinations.TEMAS_ROUTE) {
+            TemasScreen(
+                viewModel = hiltViewModel(checkNotNull(LocalViewModelStoreOwner.current) {
+                    "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+                }, null),
+                onNavigateBack = { navController.popBackStack() }
             )
         }
-
-        // Se você tiver rotas com argumentos, defina-as aqui também. Ex:
-        // composable(
-        //     route = AppDestinations.Texto_DETALHE_ROUTE_TEMPLATE,
-        //     arguments = listOf(navArgument(AppDestinations.Texto_ARG_CHAVE) { type = NavType.StringType })
-        // ) { backStackEntry ->
-        //     val chaveTexto = backStackEntry.arguments?.getString(AppDestinations.Texto_ARG_CHAVE)
-        //     if (chaveTexto != null) {
-        //         // DetalheTextoScreen(chaveTexto = chaveTexto) // Sua tela de detalhes
-        //     } else {
-        //         // Lidar com chave nula, talvez voltar ou mostrar erro
-        //         Text("Erro: Chave do texto não encontrada.")
-        //     }
-        // }
-
-        // Adicione outras rotas do seu AppDestinations aqui
     }
 }
 

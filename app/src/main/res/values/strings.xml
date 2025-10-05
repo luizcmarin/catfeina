@@ -130,5 +130,6 @@
     <string name="diminuir_fonte">Diminuir o texto</string>
     <string name="aumentar_fonte">Aumentar o texto</string>
     <string name="selecionar_tema">Selecionar Tema</string>
+    <string name="menu_temas">Temas</string>
 
 </resources>

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.LocalAtm
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -38,6 +39,7 @@ object Icones {
     val Poesia = Icons.Outlined.Pets
     val Personagem = Icons.Outlined.Pets
     val Inicio = Icons.Default.Home
+    val Lampada = Icons.Default.Lightbulb
     val Lixeira = Icons.Default.Delete
     val Mais = Icons.Default.Add
     val Menos = Icons.Default.Remove
@@ -48,6 +50,7 @@ object Icones {
     val Privacidade = Icons.Default.Policy
     val QrCode = Icons.Filled.QrCode
     val Sobre = Icons.Default.Info
+    val Temas = Icons.Filled.Palette
     val TresPontosVertical = Icons.Filled.MoreVert
     val Ver = Icons.Filled.Visibility
     val Voltar = Icons.AutoMirrored.Filled.ArrowBack
