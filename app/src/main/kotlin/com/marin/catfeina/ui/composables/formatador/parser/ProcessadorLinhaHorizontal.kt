@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorLinhaHorizontal.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorLinhaHorizontal.kt
 //
 // Descrição: Processador de tag especializado em converter a tag de linha
 //            horizontal (ex: {linha}) em um `ElementoConteudo.LinhaHorizontal`.
@@ -10,9 +10,9 @@
 // possui conteúdo para processar, apenas identifica a tag e retorna o elemento
 // de bloco correspondente que será renderizado como um `HorizontalDivider` na UI.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 
 class ProcessadorLinhaHorizontal : ProcessadorTag {
     override val palavrasChave: Set<String> = setOf("linha")

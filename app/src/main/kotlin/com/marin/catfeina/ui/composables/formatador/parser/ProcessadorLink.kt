@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorLink.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorLink.kt
 //
 // Descrição: Processador de tag especializado em converter tags de link/URL
 //            (ex: {link|https://exemplo.com|Clique aqui}) em uma anotação em linha.
@@ -11,9 +11,9 @@
 // texto do link, criando uma `AplicacaoAnotacaoLink` que será usada pelo
 // `TextoFormatadoRenderer` para criar um trecho de texto clicável na UI.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.AplicacaoAnotacaoLink
+import com.marin.catfeina.ui.composables.formatador.AplicacaoAnotacaoLink
 import timber.log.Timber
 
 class ProcessadorLink : ProcessadorTag {

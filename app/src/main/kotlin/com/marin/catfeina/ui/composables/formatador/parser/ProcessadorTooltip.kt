@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorTooltip.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorTooltip.kt
 //
 // Descrição: Processador de tag especializado em converter tags de tooltip (dica)
 //            (ex: {dica|texto base|texto que aparece na dica}) em uma anotação.
@@ -12,9 +12,9 @@
 // `AplicacaoAnotacaoTooltip` que o `TextoFormatadoRenderer` usará para
 // implementar a interatividade na UI.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.AplicacaoAnotacaoTooltip
+import com.marin.catfeina.ui.composables.formatador.AplicacaoAnotacaoTooltip
 import timber.log.Timber
 
 class ProcessadorTooltip : ProcessadorTag {

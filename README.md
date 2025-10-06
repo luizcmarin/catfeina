@@ -58,7 +58,7 @@ universo de conteúdo poético enriquecido visualmente e com formatação rica.
 
 * Android Studio (versão Hedgehog ou mais recente).
 * SDK do Android.
-* JDK 17 ou superior.
+* JDK 21 ou superior.
 * Git instalado na sua máquina.
 
 1. **Clone o repositório:**

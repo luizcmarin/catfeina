@@ -6,7 +6,7 @@
  * customizadas (formato {chave|conteúdo} ou {chave}) em uma lista de [ElementoConteudo].
  */
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ParserTextoFormatado.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ParserTextoFormatado.kt
 //
 // Descrição: Classe principal responsável por converter uma string de texto cru,
 //            contendo tags customizadas, em uma estrutura de dados de UI.
@@ -19,10 +19,10 @@
 // de `ElementoConteudo`. Esta lista é então usada pela camada de UI para
 // renderizar o texto de forma rica e interativa.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.AplicacaoEmLinha
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.AplicacaoEmLinha
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 // Se AplicacaoSpanStyle, AplicacaoAnotacaoLink, etc. estiverem em um subpacote ou arquivo diferente,
 // importe-os explicitamente aqui. Por exemplo:
 // import com.marin.catfeina.ui.componentes.formatacao.model.AplicacaoSpanStyle

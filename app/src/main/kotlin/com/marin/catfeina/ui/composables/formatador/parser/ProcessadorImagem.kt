@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorImagem.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorImagem.kt
 //
 // Descrição: Processador de tag especializado em converter tags de imagem
 //            (ex: {imagem|gato.png|Um gato olhando a paisagem}) em um
@@ -13,9 +13,9 @@
 // que a UI usará (com a ajuda da biblioteca Coil) para carregar e exibir
 // a imagem a partir dos assets do aplicativo.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 
 class ProcessadorImagem : ProcessadorTag {
     override val palavrasChave: Set<String> = setOf("imagem")

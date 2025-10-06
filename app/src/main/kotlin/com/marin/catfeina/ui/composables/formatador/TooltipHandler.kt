@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.TooltipHandler.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.TooltipHandler.kt
 //
 // Descrição: Define a interface para desacoplar a lógica de exibição de tooltips
 //            da lógica de análise de texto.
@@ -12,7 +12,7 @@
 // e desacoplado entre a camada de lógica de parsing e a camada de UI.
 // ===================================================================================
 
-package com.marin.catfeina.core.utils.formatador
+package com.marin.catfeina.ui.composables.formatador
 
 interface TooltipHandler {
     fun mostrarTooltip(textoTooltip: String)

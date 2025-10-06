@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorTag.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorTag.kt
 //
 // Descrição: Define a interface principal e as classes de dados de suporte para o
 //            mecanismo de análise (parsing) de tags de formatação.
@@ -11,10 +11,10 @@
 // utiliza uma coleção desses processadores para identificar e converter as tags
 // do texto cru nos `ElementoConteudo` ou `AplicacaoEmLinha` correspondentes.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.AplicacaoEmLinha
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.AplicacaoEmLinha
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 
 /**
  * Contexto fornecido a um [ProcessadorTag] durante o processamento.

@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorCabecalho.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorCabecalho.kt
 //
 // Descrição: Processador de tag especializado em converter tags de cabeçalho
 //            (ex: {t1|Meu Título}) em um elemento de bloco `ElementoConteudo.Cabecalho`.
@@ -11,9 +11,9 @@
 // responsabilidade é extrair o nível do cabeçalho e o texto, criando
 // um `ElementoConteudo.Cabecalho` que será posteriormente renderizado pela UI.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 import timber.log.Timber
 
 class ProcessadorCabecalho : ProcessadorTag {

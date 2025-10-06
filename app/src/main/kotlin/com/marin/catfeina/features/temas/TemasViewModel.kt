@@ -1,4 +1,4 @@
-package com.marin.catfeina.ui.theme
+package com.marin.catfeina.features.temas
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

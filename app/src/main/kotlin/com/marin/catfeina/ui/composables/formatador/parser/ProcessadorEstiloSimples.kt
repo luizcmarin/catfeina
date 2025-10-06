@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorEstiloSimples.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorEstiloSimples.kt
 //
 // Descrição: Processador de tag que lida com múltiplas tags de formatação de
 //            estilo em linha (negrito, itálico, sublinhado, destaque).
@@ -11,12 +11,12 @@
 // mais conciso. Ele é registrado no `ParserModule` e converte o conteúdo da
 // tag em uma formatação que será aplicada a um trecho do parágrafo.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import com.marin.catfeina.core.utils.formatador.AplicacaoSpanStyle // VERIFIQUE ESTE CAMINHO
+import com.marin.catfeina.ui.composables.formatador.AplicacaoSpanStyle // VERIFIQUE ESTE CAMINHO
 import timber.log.Timber
 
 class ProcessadorEstiloSimples : ProcessadorTag {

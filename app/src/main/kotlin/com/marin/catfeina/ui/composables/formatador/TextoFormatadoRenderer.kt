@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.TextoFormatadoRenderer.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.TextoFormatadoRenderer.kt
 //
 // Descrição: Composable responsável por renderizar uma lista de `ElementoConteudo`
 //            na interface do usuário (UI), traduzindo a estrutura lógica do texto
@@ -14,7 +14,7 @@
 // exibido de forma rica e interativa.
 // ===================================================================================
 
-package com.marin.catfeina.core.utils.formatador
+package com.marin.catfeina.ui.composables.formatador
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

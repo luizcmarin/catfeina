@@ -4,7 +4,7 @@
 // Descrição: Composable que constrói a tela de seleção de temas.
 // ===================================================================================
 
-package com.marin.catfeina.ui.theme
+package com.marin.catfeina.features.temas
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,18 +56,22 @@ import com.marin.catfeina.core.utils.Icones
 
 @Composable
 fun TemasScreen(
-    // Agora usando o viewModel() padrão para obter a instância injetada pelo Hilt
-    viewModel: TemasViewModel = viewModel(),
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: TemasViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    TemasScreenContent(
-        uiState = uiState,
-        onThemeSelected = viewModel::onThemeSelected,
-        onDarkModeChanged = viewModel::onDarkModeChange,
-        onNavigateBack = onNavigateBack
-    )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        TemasScreenContent(
+            uiState = uiState,
+            onThemeSelected = viewModel::onThemeSelected,
+            onDarkModeChanged = viewModel::onDarkModeChange,
+            onNavigateBack = onNavigateBack
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +86,7 @@ private fun TemasScreenContent(
         topBar = {
             TopAppBar(
                 title = { Text("Temas") },
+                windowInsets = WindowInsets(top = 0.dp, bottom = 0.dp),
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -271,7 +277,6 @@ private fun CheckboxRow(text: String, initialChecked: Boolean) {
 @Preview(showBackground = true, name = "Tela de Preferências - Claro")
 @Composable
 private fun TemasScreenLightPreview() {
-    // CORREÇÃO: O Preview agora usa o UiState correto e os temas que realmente existem.
     val temasPreview = TemasPredefinidos.get()
     val temaVerao = temasPreview.getValue(ThemeModelKey.VERAO)
     val previewState = TemasUiState(

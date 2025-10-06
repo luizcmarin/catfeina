@@ -109,17 +109,17 @@ REGULARMENTE.**
 
 ## Fase 0: Configuração do Projeto e Arquitetura Fundamental
 
-* [] **0.1. Criar novo projeto Android:**
+* [X] **0.1. Criar novo projeto Android:**
     * Usar o Android Studio, template "Empty Activity" (com Jetpack Compose).
     * Definir nome "Catfeina" e package name `com.marin.catfeina`.
 
-* [] **0.2. Configurar `libs.versions.toml`:**
+* [X] **0.2. Configurar `libs.versions.toml`:**
     * Migrar todas as dependências do `build.gradle.kts` para o arquivo `gradle/libs.versions.toml`
       para gerenciamento centralizado de versões.
     * Definir aliases para todas as bibliotecas que serão usadas (Hilt, Room, Coil, Rive,
       etc.).
 
-* [] **0.3. Adicionar Dependências Principais (via `libs.versions.toml`):**
+* [X] **0.3. Adicionar Dependências Principais (via `libs.versions.toml`):**
     * **Hilt:** `hilt-android`, `hilt-android-compiler`, `hilt-navigation-compose`.
     * **Room:** `room-runtime`, `room-ktx`, e o processador de anotações `room-compiler`.
     * **Jetpack:** `navigation-compose`, `datastore-preferences`, `lifecycle-viewmodel-compose`,
@@ -129,15 +129,15 @@ REGULARMENTE.**
     * **Rive:** `rive-android`.
     * **Testes:** remover tudo relacionado a testes, pois não serão usados.
 
-* [x] **0.4. Configurar Hilt:**
-    * [] Adicionar os plugins do Hilt nos arquivos `build.gradle.kts` (nível de projeto e de módulo
+* [X] **0.4. Configurar Hilt:**
+    * [X] Adicionar os plugins do Hilt nos arquivos `build.gradle.kts` (nível de projeto e de módulo
       `app`).
-    * [] Criar a classe `CatfeinaApplication.kt` no caminho
+    * [X] Criar a classe `CatfeinaApplication.kt` no caminho
       `app/src/main/kotlin/com/marin/catfeina/`, anotá-la com `@HiltAndroidApp`.
-    * [] Declarar `CatfeinaApplication` no `AndroidManifest.xml`.
-    * [] Anotar `MainActivity.kt` com `@AndroidEntryPoint`.
+    * [X] Declarar `CatfeinaApplication` no `AndroidManifest.xml`.
+    * [X] Anotar `MainActivity.kt` com `@AndroidEntryPoint`.
 
-* [] **0.5. Definir Estrutura de Pacotes (Packages):**
+* [X] **0.5. Definir Estrutura de Pacotes (Packages):**
     * Dentro de `com.marin.catfeina`, criar a seguinte estrutura inicial:
         * `core/`: Para código compartilhado e fundamental.
             * `core/data/`: Classes base de repositório, DataStore.
@@ -151,12 +151,12 @@ REGULARMENTE.**
             * `ui/theme/`: Gerado pelo Android Studio (`Color.kt`, `Theme.kt`, `Type.kt`).
             * `ui/composables/`: Widgets reutilizáveis (ex: `FormattedTextRenderer.kt`).
 
-* [] **0.6. Limpar e Preparar `MainActivity.kt`:**
-    * [] Limpar o conteúdo padrão gerado pelo template.
-    * [] Manter a estrutura básica com `setContent`, `CatfeinaTheme`, e um `Scaffold` inicial. O
+* [X] **0.6. Limpar e Preparar `MainActivity.kt`:**
+    * [X] Limpar o conteúdo padrão gerado pelo template.
+    * [X] Manter a estrutura básica com `setContent`, `CatfeinaTheme`, e um `Scaffold` inicial. O
       roteiro detalhará seu conteúdo posteriormente.
 
-* [] **0.7. Critério de Conclusão Fase 0:**
+* [X] **0.7. Critério de Conclusão Fase 0:**
     * Projeto compila e executa em um emulador/dispositivo.
     * `libs.versions.toml` está configurado e todas as dependências principais estão adicionadas.
     * Hilt está configurado e funcionando.
@@ -601,12 +601,12 @@ REGULARMENTE.**
       de áudio em `res/raw/`). Gerencie o ciclo de vida do `MediaPlayer` para liberar recursos
       corretamente.
 
-* [] **8.4. Atualização do Tema Baseado nas Preferências:**
-    * [] No seu `MainActivity.kt`, onde você chama `CatfeinaTheme`, você precisará obter o estado do
+* [X] **8.4. Atualização do Tema Baseado nas Preferências:**
+    * [X] No seu `MainActivity.kt`, onde você chama `CatfeinaTheme`, você precisará obter o estado do
       tema (claro/escuro) do `UserPreferencesRepository`.
-    * [] Uma abordagem limpa é injetar o repositório em um `MainViewModel` e coletar o estado do
+    * [X] Uma abordagem limpa é injetar o repositório em um `MainViewModel` e coletar o estado do
       tema lá.
-    * [] Passe o valor `isDarkMode` para o seu `CatfeinaTheme { ... }`. Dentro do `CatfeinaTheme`,
+    * [X] Passe o valor `isDarkMode` para o seu `CatfeinaTheme { ... }`. Dentro do `CatfeinaTheme`,
       use esse booleano para decidir qual `colorScheme` aplicar (o `DarkColorScheme` ou o
       `LightColorScheme`).
 
@@ -650,36 +650,7 @@ REGULARMENTE.**
 * [] **8.9. NÃO DEFINIDA:**
     * [] Tomar café.
 
-* [] **8.10. Integrar Gerenciador de Tema Dinâmico ("Vendoring"):**
-    * [] **8.10.1. Copiar Arquivos-Fonte:**
-        * [] Crie a estrutura de pacotes `io/github/seyoungcho2/dynamictheme/material3/` dentro de
-          `app/src/main/java/`.
-        * [] Copie todos os arquivos-fonte da biblioteca `ComposeDynamicTheme` para dentro da
-          estrutura de pacotes criada.
-        * [] Garanta que a dependência do Gradle para esta biblioteca (
-          `io.github.seyoungcho2:dynamic-theme-m3`) **NÃO** esteja presente no arquivo
-          `app/build.gradle.kts`.
-    * [] **8.10.2. Definir os Temas do Catfeina:**
-        * [] Crie um novo arquivo em
-          `app/src/main/java/com/marin/catfeina/ui/theme/CatfeinaThemes.kt`.
-        * [] Dentro deste arquivo, crie um `object CatfeinaThemeKeys` para definir as chaves únicas
-          de cada tema (ex: `TEMA_CLARO`, `TEMA_ESCURO`).
-        * [] Crie um `object CatfeinaThemeModels` para definir os `ThemeModel` correspondentes a
-          cada chave, utilizando os `lightColorScheme` e `darkColorScheme` já existentes no seu
-          projeto.
-    * [] **8.10.3. Inicializar o Serviço de Temas:**
-        * [] Na classe `CatfeinaApp.kt` (já existente e anotada com `@HiltAndroidApp`), localize o
-          método `onCreate()`.
-        * [] Dentro do `onCreate()`, inicialize o serviço chamando `DynamicThemeService.init(this)`.
-        * [] Use a função `registerThemeModels` para registrar os temas criados no passo anterior.
-        * [] Defina um tema padrão (ex: `TEMA_CLARO_MODEL`) usando `setDefaultThemeModel`.
-    * [] **8.10.4. Aplicar o Provedor de Tema na UI:**
-        * [] Abra o arquivo `MainActivity.kt`.
-        * [] No `setContent`, substitua o `CatfeinaTheme { ... }` existente pelo
-          `DynamicThemeService.get().ProvidesTheme { ... }`.
-        * [] Mova a `Surface` e o `AppNavHost` para dentro do lambda do `ProvidesTheme`.
-
-* [] **8.11. Critério de Conclusão Final (MVP - Produto Mínimo Viável):**
+* [] **8.10. Critério de Conclusão Final (MVP - Produto Mínimo Viável):**
     * O roteiro de desenvolvimento foi completamente revisado e adaptado para a arquitetura
       Kotlin/Compose/Hilt.
     * A refatoração com Hilt foi concluída, eliminando a criação manual de dependências na UI.

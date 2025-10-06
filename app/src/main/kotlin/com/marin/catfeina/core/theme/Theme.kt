@@ -12,13 +12,13 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun CatfeinaTheme(
-    GerenciadorTemas: GerenciadorTemas,
+    gerenciadorTemas: GerenciadorTemas,
     content: @Composable () -> Unit
 ) {
     // Coleta o ColorScheme reativo do GerenciadorTemas
-    val colorScheme by GerenciadorTemas.colorScheme.collectAsState(
+    val colorScheme by gerenciadorTemas.colorScheme.collectAsState(
         // Valor inicial para evitar tela branca, usando o tema padrão VERAO.
-        initial = GerenciadorTemas.getAvailableThemes().getValue(ThemeModelKey.VERAO).colorPalette.lightModeColors
+        initial = gerenciadorTemas.getAvailableThemes().getValue(ThemeModelKey.VERAO).colorPalette.lightModeColors
     )
 
     val view = LocalView.current

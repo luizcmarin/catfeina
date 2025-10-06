@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.ElementosConteudo.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.ElementosConteudo.kt
 //
 // Descrição: Define as classes de dados e interfaces que representam a estrutura
 //            lógica de um texto formatado, após ser processado pelo parser.
@@ -12,7 +12,7 @@
 // Jetpack Compose, sem precisar entender a sintaxe das tags originais.
 // ===================================================================================
 
-package com.marin.catfeina.core.utils.formatador
+package com.marin.catfeina.ui.composables.formatador
 
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight

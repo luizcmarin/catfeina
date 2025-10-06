@@ -19,16 +19,16 @@
 
 package com.marin.catfeina.core.di
 
-import com.marin.catfeina.core.utils.formatador.parser.ParserTextoFormatado
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorCabecalho
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorCitacao
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorEstiloSimples
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorImagem
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorItemLista
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorLinhaHorizontal
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorLink
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorTag
-import com.marin.catfeina.core.utils.formatador.parser.ProcessadorTooltip
+import com.marin.catfeina.ui.composables.formatador.parser.ParserTextoFormatado
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorCabecalho
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorCitacao
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorEstiloSimples
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorImagem
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorItemLista
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorLinhaHorizontal
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorLink
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorTag
+import com.marin.catfeina.ui.composables.formatador.parser.ProcessadorTooltip
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

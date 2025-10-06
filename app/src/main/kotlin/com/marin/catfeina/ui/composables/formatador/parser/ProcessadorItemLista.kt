@@ -1,4 +1,4 @@
-// ===================================================================================// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorItemLista.kt
+// ===================================================================================// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorItemLista.kt
 //
 // Descrição: Processador de tag especializado em converter tags de item de lista
 //            (ex: {li|Texto do item com {n|negrito}}).
@@ -10,9 +10,9 @@
 // de lista contenham suas próprias formatações em linha (negrito, links, etc.),
 // criando uma estrutura de dados rica que será corretamente renderizada na UI.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider

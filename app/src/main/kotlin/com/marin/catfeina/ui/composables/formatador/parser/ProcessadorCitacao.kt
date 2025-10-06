@@ -1,5 +1,5 @@
 // ===================================================================================
-// Arquivo: com.marin.catfeina.core.utils.formatador.parser.ProcessadorCitacao.kt
+// Arquivo: com.marin.catfeina.ui.composables.formatador.parser.ProcessadorCitacao.kt
 //
 // Descrição: Processador de tag especializado em converter tags de citação
 //            (ex: {cit|Texto da citação}) em um `ElementoConteudo.Citacao`.
@@ -11,9 +11,9 @@
 // `ElementoConteudo.Citacao`, que será posteriormente estilizado e
 // renderizado pela camada de UI.
 // ===================================================================================
-package com.marin.catfeina.core.utils.formatador.parser
+package com.marin.catfeina.ui.composables.formatador.parser
 
-import com.marin.catfeina.core.utils.formatador.ElementoConteudo
+import com.marin.catfeina.ui.composables.formatador.ElementoConteudo
 
 class ProcessadorCitacao : ProcessadorTag {
     override val palavrasChave: Set<String> = setOf("cit")
