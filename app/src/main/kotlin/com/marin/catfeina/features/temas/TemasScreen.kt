@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.marin.catfeina.core.theme.TemasPredefinidos
 import com.marin.catfeina.core.theme.ThemeModelKey
-import com.marin.catfeina.core.utils.Icones
+import com.marin.catfeina.core.Icones
 
 @Composable
 fun TemasScreen(

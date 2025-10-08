@@ -1,3 +1,8 @@
+GEMINI:  voce tem permissão para ler/ver/solicitar todos os arquivos do meu pojeto.  deve constantemente ler da IDE e não confiar na tua copia de memoria, porque eu estou sempre alterando os arquivos.   agora leia  @GEMINI.md  e entenda o que vamos fazer.
+Qual nosso proximo passo?
+
+
+
 # Catfeina: Documento de Projeto e Roteiro de Desenvolvimento (Edição Kotlin)
 
 ## 1. Informações Gerais do Projeto
@@ -49,7 +54,7 @@ A aplicação será construída sobre as seguintes tecnologias e princípios:
       tempo de compilação.
     * **Preferências do Usuário:** **Jetpack DataStore (Preferences)** para armazenar configurações
       simples do usuário de forma assíncrona.
-    * **Análise de JSON (Assets):** **Moshi** para analisar os dados iniciais (poesias, etc.) de
+    * **Análise de JSON (Assets):** **kotlinx-serialization** para analisar os dados iniciais (poesias, etc.) de
       arquivos JSON armazenados na pasta `assets`.
 
 * **2.4. Navegação:**
@@ -124,7 +129,7 @@ REGULARMENTE.**
     * **Room:** `room-runtime`, `room-ktx`, e o processador de anotações `room-compiler`.
     * **Jetpack:** `navigation-compose`, `datastore-preferences`, `lifecycle-viewmodel-compose`,
       `lifecycle-runtime-ktx`.
-    * **Moshi:** `moshi-kotlin`.
+    * **kotlinx-serialization:** `kotlinx-serialization`.
     * **Coil:** `coil-compose`.
     * **Rive:** `rive-android`.
     * **Testes:** remover tudo relacionado a testes, pois não serão usados.
@@ -149,8 +154,7 @@ REGULARMENTE.**
             * `features/preferencias/`
         * `ui/`: Elementos de UI compartilhados.
             * `ui/theme/`: Gerado pelo Android Studio (`Color.kt`, `Theme.kt`, `Type.kt`).
-            * `ui/composables/`: Widgets reutilizáveis (ex: `FormattedTextRenderer.kt`).
-
+        
 * [X] **0.6. Limpar e Preparar `MainActivity.kt`:**
     * [X] Limpar o conteúdo padrão gerado pelo template.
     * [X] Manter a estrutura básica com `setContent`, `CatfeinaTheme`, e um `Scaffold` inicial. O
@@ -164,40 +168,40 @@ REGULARMENTE.**
 
 ## Fase 1: Camada de Dados Fundamental e Preferências do Usuário
 
-* [] **1.1. Definir as Entidades e DAOs do Banco de Dados com Room:**
-    * [] No pacote `core/data/`, crie subpacotes `entities/` e `daos/`.
-    * [] No pacote `entities/`, defina as classes de dados para cada tabela, anotando-as com
+* [X] **1.1. Definir as Entidades e DAOs do Banco de Dados com Room:**
+    * [X] No pacote `core/data/`, crie subpacotes `entities/` e `daos/`.
+    * [X] No pacote `entities/`, defina as classes de dados para cada tabela, anotando-as com
       `@Entity`. Use `@PrimaryKey`, `@ColumnInfo`, `@TypeConverters`, etc., conforme necessário.
-        * `PoesiaEntity`, `PoesiaUsuarioEstadoEntity`, `CategoriaPoesiaEntity`, `PersonagemEntity`,
-          `TextoGeralEntity`, `AtelieItemEntity`.
-    * [] No pacote `daos/`, crie as interfaces para cada DAO (Data Access Object), anotando-as com
+        * `PoesiaEntity`, `PoesiaNotaEstadoEntity`, `CategoriaPoesiaEntity`, `PersonagemEntity`,
+          `InformativoEntity`, `AtelierEntity`.
+    * [X] No pacote `daos/`, crie as interfaces para cada DAO (Data Access Object), anotando-as com
       `@Dao`.
-    * [] Dentro das interfaces DAO, defina as funções de acesso ao banco com anotações como
+    * [X] Dentro das interfaces DAO, defina as funções de acesso ao banco com anotações como
       `@Query`,
       `@Insert`, `@Upsert`, `@Delete`.
         * Use `Flow<List<...>>` como tipo de retorno para queries que precisam ser reativas.
         * Crie a query `selectAllPoesiasWithEstado` com `LEFT JOIN` para buscar as poesias já com
           seu estado de usuário.
 
-* [] **1.2. Implementar a Carga Inicial de Dados:**
-    * [] Crie a pasta `app/src/main/assets/data/`.
-    * [] Dentro dela, adicione os arquivos JSON com os dados iniciais: `poesias.json`,
-      `personagens.json`, `categorias.json`, e `textos_gerais.json`.
-    * [] Crie `data class`es Kotlin no pacote `core/data/models/` para representar a estrutura
-      desses arquivos JSON. Anote-as com `@JsonClass(generateAdapter = true)` do Moshi.
-
-* [] **1.3. Configurar Injeção de Dependência para a Camada de Dados:**
-    * [] No pacote `core/di/`, crie o `DataModule.kt`.
-    * [] Crie uma classe `DatabaseCallback.kt` que implementa `RoomDatabase.Callback`. No método
-      `onCreate`, coloque a lógica para ler os arquivos JSON da pasta `assets` (usando Moshi),
+* [X] **1.2. Implementar a Carga Inicial de Dados:**
+    * [X] Crie a pasta `app/src/main/assets/data/`.
+    * [X] Dentro dela, adicione os arquivos JSON com os dados iniciais: `poesias.json`,
+      `personagens.json`, `categorias.json`, e `informativos.json`.
+    * [X] Crie `data class`es Kotlin no pacote `core/data/models/` para representar a estrutura
+      desses arquivos JSON.
+  
+* [X] **1.3. Configurar Injeção de Dependência para a Camada de Dados:**
+    * [X] No pacote `core/di/`, crie o `DataModule.kt`.
+    * [X] Crie uma classe `DatabaseInitializer.kt` que implementa `RoomDatabase.Callback`. No método
+      `onCreate`, coloque a lógica para ler os arquivos JSON da pasta `assets` (usando kotlinx-serialization),
       converter para os modelos de entidade e inserir no banco usando os DAOs. Injete as
-      dependências necessárias (Contexto, Moshi, DAOs via Provider) nesta classe.
-    * [] No `DataModule.kt`, crie uma função `@Provides @Singleton` para fornecer a instância do
+      dependências necessárias (Contexto, kotlinx-serialization, DAOs via Provider) nesta classe.
+    * [X] No `DataModule.kt`, crie uma função `@Provides @Singleton` para fornecer a instância do
       `AppDatabase`.
         * Esta função receberá o `Contexto` e o `DatabaseCallback` via Hilt.
         * Use `Room.databaseBuilder(...)` para construir o banco, e chame `.addCallback(...)`
           passando a instância do `DatabaseCallback`.
-    * [] No `DataModule.kt`, crie funções `@Provides` para fornecer cada DAO a partir da instância
+    * [X] No `DataModule.kt`, crie funções `@Provides` para fornecer cada DAO a partir da instância
       do
       `AppDatabase` (ex: `database.poesiaDao()`).
 
@@ -209,16 +213,16 @@ REGULARMENTE.**
     * [] No `DataModule.kt`, adicione uma função `@Provides @Singleton` para fornecer o
       `UserPreferencesRepository`.
 
-* [] **1.5. Criar os Repositórios da Aplicação:**
-    * [] Para cada feature principal (ex: `poesias`), crie a interface do repositório no pacote da
+* [X] **1.5. Criar os Repositórios da Aplicação:**
+    * [X] Para cada feature principal (ex: `poesias`), crie a interface do repositório no pacote da
       feature, ex: `features/poesias/data/PoesiaRepository.kt`.
-    * [] Crie a implementação concreta, ex: `features/poesias/data/PoesiaRepositoryImpl.kt`.
-    * [] A implementação (`PoesiaRepositoryImpl`) receberá o(s) DAO(s) necessário(s) via injeção
+    * [X] Crie a implementação concreta, ex: `features/poesias/data/PoesiaRepositoryImpl.kt`.
+    * [X] A implementação (`PoesiaRepositoryImpl`) receberá o(s) DAO(s) necessário(s) via injeção
       de dependência no seu construtor.
-    * [] Implemente os métodos do repositório, que chamarão as funções do DAO (ex:
+    * [X] Implemente os métodos do repositório, que chamarão as funções do DAO (ex:
       `poesiaDao.selectAllPoesiasWithEstado()`). O DAO já retornará um `Flow`, que o repositório
       simplesmente repassará.
-    * [] Crie um módulo Hilt `RepositoryModule.kt` em `core/di/` para prover as implementações dos
+    * [X] Crie um módulo Hilt `RepositoryModule.kt` em `core/di/` para prover as implementações dos
       repositórios.
 
 * [] **1.6. Critério de Conclusão Fase 1:**
@@ -230,7 +234,7 @@ REGULARMENTE.**
       DataStore.
     * As camadas de dados estão prontas para serem consumidas pelos ViewModels nas próximas fases.
 
-## Fase 2: Features Iniciais - Sistema de Formatação de Texto e Tela de Configurações
+## Fase 2: Features Iniciais - Sistema de Formatação de Texto
 
 * [] **2.1. Desenvolver Sistema de Análise e Renderização de Texto Formatado:**
     * [] **2.1.1. Lógica do Parser:**
@@ -249,43 +253,6 @@ REGULARMENTE.**
         * [] Crie a função `@Composable rememberMarkupAnnotatedString(markupText: String)` que usa
           `remember` para garantir que o parsing só ocorra quando o texto de entrada mudar.
         * [] Este Composable chamará `getMarkupStyles()` e `parseMarkup()` internamente.
-
-* [] **2.2. Desenvolver a Tela de Configurações (`PreferenciasScreen`):**
-    * [] **2.2.1. ViewModel:**
-        * [] No pacote `features/preferencias/`, crie `PreferenciasViewModel.kt`.
-        * [] Anote a classe com `@HiltViewModel`.
-        * [] Injete o `UserPreferencesRepository` via construtor com `@Inject`.
-        * [] Exponha os valores das preferências (ex: `isDarkMode`) como um `StateFlow`, coletando
-          os dados do repositório.
-        * [] Crie funções para atualizar as preferências (ex: `setDarkMode(Boolean)`), que chamarão
-          as funções `suspend` do repositório dentro de um `viewModelScope.launch`.
-    * [] **2.2.2. UI (Tela):**
-        * [] No pacote `features/preferencias/ui/`, crie `PreferenciasScreen.kt`.
-        * [] O Composable `PreferenciasScreen` receberá os valores de estado e as funções de evento
-          do `ViewModel` como parâmetros.
-        * [] Crie os controles de UI para cada preferência:
-            * **Modo de Exibição:** `Switch` ou `SegmentedButton` para Claro/Escuro.
-            * **Tamanho do Texto:** `Slider` para ajustar um fator de escala de fonte.
-            * Cada controle, ao ser alterado, chama a função correspondente no ViewModel.
-    * [] **2.2.3. Navegação e Integração:**
-        * [] No seu grafo de navegação (`AppNavHost`), na rota de preferências, obtenha o ViewModel
-          usando `val viewModel: PreferenciasViewModel = hiltViewModel()`.
-        * [] Colete o estado do ViewModel com `collectAsState()` e passe os valores e funções para o
-          `PreferenciasScreen`.
-
-* [] **2.3. Desenvolver a Tela de Textos Gerais (Sobre, Termos, etc.):**
-    * [] **2.3.1. Dados:** Garanta que os textos (sobre, termos de uso) estejam no banco de dados,
-      carregados na Fase 1 a partir de um JSON. Crie as queries necessárias no Room para
-      buscar um texto por uma chave/ID única.
-    * [] **2.3.2. ViewModel:**
-        * [] Crie um `TextoGeralViewModel.kt`. Ele receberá o ID do texto a ser exibido (via
-          `SavedStateHandle` do Hilt) e usará o `Repository` correspondente para buscar os dados.
-    * [] **2.3.3. UI (Tela):**
-        * [] Crie `TextoGeralScreen.kt`.
-        * [] A tela receberá o ID do texto como argumento de navegação.
-        * [] Usará o `TextoGeralViewModel` para obter os dados (título e conteúdo).
-        * [] Exibirá o conteúdo usando o `rememberMarkupAnnotatedString` criado no item 2.1.3 para
-          renderizar o texto formatado corretamente.
 
 * [] **2.4. Implementar a Tela de Abertura (Splash Screen):**
     * [] **2.4.1. Lógica:**
@@ -315,12 +282,12 @@ REGULARMENTE.**
 * [] **3.1. Definir Modelos de Dados e Queries Adicionais:**
     * [] **Modelos de Estado do Usuário:** Certifique-se de que as entidades para armazenar o estado
       gerado pelo usuário foram definidas na Fase 1.
-        * `PoesiaUsuarioEstadoEntity`: `poesiaId` (chave primária/estrangeira), `ehFavorita`,
+        * `PoesiaNotaEstadoEntity`: `poesiaId` (chave primária/estrangeira), `ehFavorita`,
           `foiLida`.
         * `AnotacaoPoesiaEntity`: `poesiaId` (chave primária/estrangeira), `textoAnotacao`,
           `dataAtualizado`.
     * [] **Queries de Junção (Join):** No DAO correspondente (`PoesiaDao.kt`), certifique-se de que
-      a query que busca a lista de poesias já faz a junção com `PoesiaUsuarioEstadoEntity`.
+      a query que busca a lista de poesias já faz a junção com `PoesiaNotaEstadoEntity`.
         * O retorno deve ser um modelo de dados combinado (uma `data class` com `@Embedded`)
           para encapsular a poesia e seu estado. Ex:
           `@Query("SELECT * FROM poesias LEFT JOIN poesias_usuario_estado ON poesias.id = poesias_usuario_estado.poesiaId") fun getPoesiasComEstado(): Flow<List<PoesiaComEstado>>`
@@ -335,31 +302,31 @@ REGULARMENTE.**
         * `suspend fun salvarAnotacao(poesiaId: Long, texto: String)`
 
 * [] **3.3. Implementar os ViewModels da Feature:**
-    * [] **`PoesiaListViewModel.kt`:**
-        * [] Anote com `@HiltViewModel` e injete o `PoesiaRepository`.
-        * [] Crie um `StateFlow` para a UI, `val uiState: StateFlow<PoesiaListUiState>`, que
+    * [X] **`PoesiaListViewModel.kt`:**
+        * [X] Anote com `@HiltViewModel` e injete o `PoesiaRepository`.
+        * [X] Crie um `StateFlow` para a UI, `val uiState: StateFlow<PoesiaListUiState>`, que
           representará os diferentes estados (Carregando, Sucesso com a lista de poesias, Erro).
-        * [] Use o operador `stateIn` para converter o `Flow` do repositório em um `StateFlow` de
+        * [X] Use o operador `stateIn` para converter o `Flow` do repositório em um `StateFlow` de
           forma eficiente.
-    * [] **`PoesiaDetailViewModel.kt`:**
-        * [] Anote com `@HiltViewModel` e injete o `PoesiaRepository` e o `SavedStateHandle`.
-        * [] Use o `SavedStateHandle` para obter o `poesiaId` passado pela navegação.
-        * [] Combine múltiplos `Flows` do repositório (detalhes da poesia, estado do usuário,
+    * [X] **`PoesiaDetailViewModel.kt`:**
+        * [X] Anote com `@HiltViewModel` e injete o `PoesiaRepository` e o `SavedStateHandle`.
+        * [X] Use o `SavedStateHandle` para obter o `poesiaId` passado pela navegação.
+        * [X] Combine múltiplos `Flows` do repositório (detalhes da poesia, estado do usuário,
           anotação) usando `combine` para criar um único `StateFlow` para a UI de detalhes.
-        * [] Crie funções para os eventos da UI (ex: `onToggleFavorita()`,
+        * [X] Crie funções para os eventos da UI (ex: `onToggleFavorita()`,
           `onSaveAnotacao(texto: String)`), que chamarão os métodos `suspend` do repositório em um
           `viewModelScope.launch`.
 
-* [] **3.4. Desenvolver a UI da Feature (Composables):**
-    * [] **Tela de Lista (`PoesiasScreen`):**
-        * [] Obtenha o `PoesiaListViewModel` com `hiltViewModel()`.
-        * [] Colete o `uiState` com `collectAsStateWithLifecycle()` (requer dependência
+* [X] **3.4. Desenvolver a UI da Feature (Composables):**
+    * [X] **Tela de Lista (`PoesiasScreen`):**
+        * [X] Obtenha o `PoesiaListViewModel` com `hiltViewModel()`.
+        * [X] Colete o `uiState` com `collectAsStateWithLifecycle()` (requer dependência
           `lifecycle-runtime-compose`).
-        * [] Use `LazyColumn` para exibir a lista de poesias. Cada item será um `Card` customizado
+        * [X] Use `LazyColumn` para exibir a lista de poesias. Cada item será um `Card` customizado
           mostrando imagem (com **Coil**), título e um ícone para favoritar.
-        * [] A ação de clique em um item navega para `PoesiaDetailScreen` com o `poesiaId`.
-    * [] **Tela de Detalhes (`PoesiaDetailScreen`):**
-        * [] Obtenha o `PoesiaDetailViewModel`.
+        * [X] A ação de clique em um item navega para `PoesiaDetalhesScreen` com o `poesiaId`.
+    * [X] **Tela de Detalhes (`PoesiaDetalhesScreen`):**
+        * [X] Obtenha o `PoesiaDetailViewModel`.
         * [] Exiba a imagem da poesia com **Coil**.
         * [] Use o `rememberMarkupAnnotatedString` (da Fase 2) para renderizar o conteúdo da poesia.
         * [] No `LaunchedEffect`, chame a função do ViewModel para marcar a poesia como "lida".
@@ -368,9 +335,9 @@ REGULARMENTE.**
         * [] Adicione botões para "Salvar Anotação" e outras ações (Copiar, Compartilhar) que
           disparam eventos no ViewModel.
 
-* [] **3.5. Integração com a Navegação:**
-    * [] No seu `AppNavHost`, adicione as rotas para `PoesiasScreen` e `PoesiaDetailScreen`.
-    * [] A rota de detalhes deve aceitar o `poesiaId` como argumento (ex:
+* [X] **3.5. Integração com a Navegação:**
+    * [X] No seu `AppNavHost`, adicione as rotas para `PoesiasScreen` e `PoesiaDetalhesScreen`.
+    * [X] A rota de detalhes deve aceitar o `poesiaId` como argumento (ex:
       `route = "poesia_detalhe/{poesiaId}"`).
 
 * [] **3.6. Critério de Conclusão Fase 3:**
@@ -383,24 +350,24 @@ REGULARMENTE.**
 
 ## Fase 4: Features Adicionais - Personagens, Histórico e Atalhos
 
-* [] **4.1. Desenvolver a Feature "Personagens":**
-    * [] **4.1.1. Camada de Dados:**
-        * [] Garanta que a entidade `Personagem.sq` e suas queries (`selectAll`, `selectById`) foram
+* [X] **4.1. Desenvolver a Feature "Personagens":**
+    * [X] **4.1.1. Camada de Dados:**
+        * [X] Garanta que a entidade `Personagem.sq` e suas queries (`selectAll`, `selectById`) foram
           criadas na Fase 1.
-        * [] Implemente o `PersonagemRepository.kt` e sua implementação, seguindo o mesmo padrão do
+        * [X] Implemente o `PersonagemRepository.kt` e sua implementação, seguindo o mesmo padrão do
           `PoesiaRepository`.
-    * [] **4.1.2. ViewModels:**
-        * [] Crie `PersonagemListViewModel.kt` para buscar a lista de todos os personagens.
-        * [] Crie `PersonagemDetailViewModel.kt` para buscar os detalhes de um único personagem,
+    * [X] **4.1.2. ViewModels:**
+        * [X] Crie `PersonagemListViewModel.kt` para buscar a lista de todos os personagens.
+        * [X] Crie `PersonagemDetailViewModel.kt` para buscar os detalhes de um único personagem,
           usando o `personagemId` injetado pelo `SavedStateHandle`.
-    * [] **4.1.3. UI (Telas):**
-        * [] Crie `PersonagemListScreen.kt` que exibirá uma `LazyColumn` ou `LazyVerticalGrid` de
+    * [X] **4.1.3. UI (Telas):**
+        * [X] Crie `PersonagemListScreen.kt` que exibirá uma `LazyColumn` ou `LazyVerticalGrid` de
           personagens, cada um com sua foto (usando **Coil**) e nome. O clique em um item navega
           para a tela de detalhes.
-        * [] Crie `PersonagemDetailScreen.kt` para exibir a foto principal, nome, e a descrição
+        * [X] Crie `PersonagemDetailScreen.kt` para exibir a foto principal, nome, e a descrição
           formatada usando o `rememberMarkupAnnotatedString`.
-    * [] **4.1.4. Navegação:**
-        * [] Adicione as rotas para `PersonagemListScreen` e `PersonagemDetailScreen` no
+    * [X] **4.1.4. Navegação:**
+        * [X] Adicione as rotas para `PersonagemListScreen` e `PersonagemDetailScreen` no
           `AppNavHost`.
 
 * [] **4.2. Implementar Funcionalidade de "Histórico de Visitas":**
@@ -457,7 +424,7 @@ REGULARMENTE.**
     * [] **TopAppBar:** Conterá um ícone para abrir o `NavigationDrawer` e um botão para navegar
       para a `SearchScreen`.
     * [] **BottomAppBar:** Conterá os `IconButton` para as principais seções do app (ex: Início,
-      Marcadores, Ateliê), gerenciando a navegação com o `navController`.
+      Marcadores, Atelier), gerenciando a navegação com o `navController`.
     * [] **NavigationDrawer:** Conterá a `SettingsScreen` (desenvolvida na Fase 2) e outros links
       para seções menos frequentes (ex: Sobre, Termos de Uso).
 * [] **5.3. Implementar a Funcionalidade de Pesquisa Global:**
@@ -494,29 +461,28 @@ REGULARMENTE.**
     * A Pesquisa Global funciona, retornando resultados de diferentes tipos de conteúdo.
     * A funcionalidade de Text-to-Speech está implementada e funcional nas telas de poesia.
 
-## Fase 6: Feature "Ateliê", Polimento e Testes
+## Fase 6: Feature "Atelier", Polimento e Testes
 
-* [] **6.1. Desenvolver a Feature "Ateliê do Usuário":**
+* [] **6.1. Desenvolver a Feature "Atelier do Usuário":**
     * [] **6.1.1. Camada de Dados:**
-        * [] Crie `AtelieUsuario.sq` com a tabela para notas do usuário (`id`, `titulo`, `conteudo`,
+        * [] Crie `Atelier.sq` com a tabela para notas do usuário (`id`, `titulo`, `conteudo`,
           `dataAtualizado`, `fixada`).
-        * [] Implemente `AtelieUsuarioRepository.kt` com os métodos para CRUD completo (listar,
+        * [] Implemente `AtelierRepository.kt` com os métodos para CRUD completo (listar,
           buscar por id, salvar, deletar).
     * [] **6.1.2. ViewModels:**
-        * [] Crie `AtelieListViewModel.kt` para carregar a lista de todas as notas.
-        * [] Crie `AtelieEditViewModel.kt` para carregar uma nota existente ou preparar uma nova, e
-          para salvar ou deletar a nota. Use o `SavedStateHandle` para receber o `notaId` (que pode
-          ser nulo para uma nova nota).
+        * [] Crie `AtelierListViewModel.kt` para carregar a lista de todas as notas.
+        * [] Crie `AtelierEditViewModel.kt` para carregar uma nota existente ou preparar uma nova, e
+          para salvar ou deletar a nota.
     * [] **6.1.3. UI (Telas):**
-        * [] Crie `AtelieListScreen.kt`. Use `LazyColumn` para exibir a lista de notas. Cada item
+        * [] Crie `AtelierListScreen.kt`. Use `LazyColumn` para exibir a lista de notas. Cada item
           deve mostrar título, trecho do conteúdo e data. Adicione um `FloatingActionButton` (FAB)
           para navegar para a tela de edição.
-        * [] Crie `AtelieEditScreen.kt`. Conterá `TextFields` para o título e o conteúdo. O botão "
+        * [] Crie `AtelierEditScreen.kt`. Conterá `TextFields` para o título e o conteúdo. O botão "
           Salvar" na `TopAppBar` deve disparar a função de salvamento no ViewModel.
     * [] **6.1.4. Navegação:**
-        * [] Adicione as rotas para `AtelieListScreen` e `AtelieEditScreen` no `AppNavHost`.
-        * [] Conecte o item "Ateliê" da sua `BottomAppBar` (a ser adicionado) para navegar até
-          `AtelieListScreen`.
+        * [] Adicione as rotas para `AtelierListScreen` e `AtelierEditScreen` no `AppNavHost`.
+        * [] Conecte o item "Atelier" da sua `BottomAppBar` (a ser adicionado) para navegar até
+          `AtelierListScreen`.
 
 * [] **6.2. Polimento Geral da UI/UX:**
     * [] **Consistência:** Revise todas as telas para garantir consistência visual (espaçamentos,
@@ -540,7 +506,7 @@ REGULARMENTE.**
     * [] Gere e teste um App Bundle de release (`./gradlew bundleRelease`).
 
 * [] **6.5. Critério de Conclusão Fase 6:**
-    * A feature "Ateliê" está completamente funcional.
+    * A feature "Atelier" está completamente funcional.
     * O aplicativo tem uma UI/UX polida, com bom tratamento de todos os estados.
     * Uma base sólida de testes unitários e de UI foi criada para as features críticas.
     * O aplicativo está configurado e pronto para ser publicado.
@@ -634,8 +600,8 @@ REGULARMENTE.**
 
 * [] **8.7. Finalizar a Estrutura de Navegação:**
     * [] **BottomAppBar:** No seu `MainActivity.kt`, adicione os itens de menu que faltam para a
-      `bottomBarItems`, como "Ateliê" e "Marcadores", cada um com seu ícone e rota.
-    * [] **Rotas com Argumentos:** Para telas de detalhes (como `PoesiaDetailScreen`), defina a rota
+      `bottomBarItems`, como "Atelier" e "Marcadores", cada um com seu ícone e rota.
+    * [] **Rotas com Argumentos:** Para telas de detalhes (como `PoesiaDetalhesScreen`), defina a rota
       no `AppNavHost` para aceitar um argumento, como você comentou no seu código:
       `composable("poesia_detalhe/{poesiaId}") { ... }`.
     * [] **Navegação a partir de Listas:** Nas suas telas de lista (`PoesiasScreen`,
@@ -643,7 +609,7 @@ REGULARMENTE.**
       `navController.navigate("poesia_detalhe/${item.id}")`.
 
 * [] **8.8. Adicionar Ícones ao `Icones.kt`:**
-    * [] Conforme novas features são adicionadas (Pesquisa, Histórico, Ateliê, Marcadores), adicione
+    * [] Conforme novas features são adicionadas (Pesquisa, Histórico, Atelier, Marcadores), adicione
       os `ImageVector`s correspondentes ao seu objeto `core/utils/Icones.kt` para manter a
       consistência.
 
@@ -654,7 +620,7 @@ REGULARMENTE.**
     * O roteiro de desenvolvimento foi completamente revisado e adaptado para a arquitetura
       Kotlin/Compose/Hilt.
     * A refatoração com Hilt foi concluída, eliminando a criação manual de dependências na UI.
-    * As features principais (Configurações, Poesias, Personagens, Ateliê) estão implementadas e
+    * As features principais (Configurações, Poesias, Personagens, Atelier) estão implementadas e
       acessíveis através da estrutura de navegação principal.
     * O aplicativo está estável, testado e pronto para ser usado e evoluído com as fases de
       polimento e pós-lançamento.
@@ -683,13 +649,13 @@ REGULARMENTE.**
     * [] Escreva os textos para a listagem na Google Play Store (título, descrição curta, descrição
       completa).
     * [] Prepare as capturas de tela (`screenshots`) das principais telas do aplicativo (Início,
-      Detalhes da Poesia, Configurações, Ateliê).
+      Detalhes da Poesia, Configurações, Atelier).
 
 * [] **9.4. Execução de Testes Finais:**
     * [] Rode todos os testes unitários e de UI (`./gradlew test connectedCheck`) uma última vez
       para garantir que nenhuma regressão foi introduzida.
     * [] Realize testes manuais de ponta a ponta nos fluxos mais críticos do aplicativo (ciclo de
-      vida completo de uma nota no Ateliê, favoritar uma poesia, mudar um tema, etc.).
+      vida completo de uma nota no Atelier, favoritar uma poesia, mudar um tema, etc.).
 
 * [] **9.5. Gerar o Artefato Final para Publicação:**
     * [] Gere o App Bundle de release final e assinado (`./gradlew bundleRelease`).

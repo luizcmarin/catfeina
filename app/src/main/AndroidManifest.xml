@@ -25,17 +25,14 @@
         </activity>
 
         <!-- ====================================================================== -->
-        <!--      INÍCIO DA CORREÇÃO: Configuração do AndroidX Startup Provider       -->
+        <!--      Configuração do AndroidX Startup Provider                         -->
         <!-- ====================================================================== -->
-        <!-- Este provider é o ponto de entrada para a biblioteca AndroidX Startup. -->
-        <!-- Ele descobre e executa todos os Initializers declarados.               -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
 
-            <!-- 1. DECLARA O SEU INICIALIZADOR: -->
             <!-- Diz ao sistema para usar a sua classe RiveInitializer. -->
             <meta-data
                 android:name="com.marin.catfeina.core.di.RiveInitializer"
@@ -49,11 +46,11 @@
                 android:name="app.rive.runtime.kotlin.RiveInitializer"
                 tools:node="remove" />
 
+            <!-- Este provider executa nosso inicializador de banco de dados -->
+            <meta-data
+                android:name="com.marin.catfeina.core.data.DatabaseInitializer"
+                android:value="androidx.startup" />
         </provider>
-        <!-- ====================================================================== -->
-        <!--                          FIM DA CORREÇÃO                               -->
-        <!-- ====================================================================== -->
-
     </application>
 
 </manifest>

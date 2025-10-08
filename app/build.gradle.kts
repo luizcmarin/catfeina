@@ -11,6 +11,11 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
@@ -106,9 +111,6 @@ dependencies {
     // Injeção de Dependência (Hilt)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
-    // JSON Parser (Moshi)
-    ksp(libs.moshi.codegen)
 
     ksp(libs.androidx.room.compiler)
 

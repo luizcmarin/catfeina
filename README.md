@@ -26,13 +26,13 @@ universo de conteúdo poético enriquecido visualmente e com formatação rica.
 * **Design Moderno com Material 3:** Interface de usuário limpa e intuitiva construída com Jetpack
   Compose e os princípios do Material Design 3.
 * **Arquitetura Robusta:** Segue princípios da Arquitetura Limpa, utilizando:
-    * **SQLDelight:** Para persistência de dados local (SQLite).
+    * **Room:** Para persistência de dados local (SQLite).
     * **Hilt:** Para gerenciamento de estado e injeção de dependências.
     * **Navigation for Compose:** Para uma navegação declarativa entre telas.
     * **Coil:** Para carregamento de imagens.
     * **Jetpack DataStore:** Para armazenamento de preferências simples do usuário.
 * **População Inicial de Dados:** Conteúdo base carregado localmente na primeira inicialização (a
-  partir de JSON com Moshi).
+  partir de JSON com kotlinx-serialization).
 * **(Opcional) Mascote Interativo "Cashito":** Um mascote animado com Rive.
 
 ## 🛠️ Tecnologias Utilizadas
@@ -42,11 +42,11 @@ universo de conteúdo poético enriquecido visualmente e com formatação rica.
 * **Arquitetura:** Arquitetura Limpa com **MVVM**.
 * **Gerenciamento de Estado / Injeção de Dependência:
   ** [Hilt](https://developer.android.com/training/dependency-injection/hilt-android).
-* **Persistência de Dados:** [SQLDelight](https://cashapp.github.io/sqldelight/) (SQLite).
+* **Persistência de Dados:** [Room](https://cashapp.github.io/Room/) (SQLite).
 * **Navegação:** [Navigation for Compose](https://developer.android.com/jetpack/compose/navigation).
 * **Preferências:
   ** [Jetpack DataStore](https://developer.android.com/topic/libraries/architecture/datastore).
-* **Análise de JSON:** [Moshi](https://github.com/square/moshi).
+* **Análise de JSON:** kotlinx-serialization.
 * **Animações:**
     * [Rive](https://rive.app/)
     * Animações nativas do Jetpack Compose.

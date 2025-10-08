@@ -1,6 +1,7 @@
 package com.marin.catfeina.core.theme
 
 import androidx.compose.material3.ColorScheme
+import com.marin.catfeina.core.data.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -8,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class GerenciadorTemas @Inject constructor(
-    private val themePreferences: ThemePreferencesRepository
+    private val themePreferences: UserPreferencesRepository
 ) {
     private val availableThemes: Map<ThemeModelKey, ThemeModel> = TemasPredefinidos.get()
 

@@ -1,0 +1,321 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "8af0d03eb424d9a7e0a23c665ebe44c9",
+    "entities": [
+      {
+        "tableName": "poesias",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `categoria` TEXT NOT NULL, `titulo` TEXT NOT NULL, `textoBase` TEXT NOT NULL, `texto` TEXT NOT NULL, `textoFinal` TEXT, `imagem` TEXT, `autor` TEXT, `nota` TEXT, `link` TEXT, `dataCriacao` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoria",
+            "columnName": "categoria",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titulo",
+            "columnName": "titulo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "textoBase",
+            "columnName": "textoBase",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "texto",
+            "columnName": "texto",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "textoFinal",
+            "columnName": "textoFinal",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "imagem",
+            "columnName": "imagem",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "autor",
+            "columnName": "autor",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "nota",
+            "columnName": "nota",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "campoUrl",
+            "columnName": "link",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dataCriacao",
+            "columnName": "dataCriacao",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_poesias_categoria",
+            "unique": false,
+            "columnNames": [
+              "categoria"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_poesias_categoria` ON `${TABLE_NAME}` (`categoria`)"
+          },
+          {
+            "name": "index_poesias_titulo",
+            "unique": false,
+            "columnNames": [
+              "titulo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_poesias_titulo` ON `${TABLE_NAME}` (`titulo`)"
+          },
+          {
+            "name": "index_poesias_dataCriacao",
+            "unique": false,
+            "columnNames": [
+              "dataCriacao"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_poesias_dataCriacao` ON `${TABLE_NAME}` (`dataCriacao`)"
+          }
+        ]
+      },
+      {
+        "tableName": "PoesiaNota",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`poesiaId` INTEGER NOT NULL, `ehFavorita` INTEGER NOT NULL DEFAULT 0, `foiLida` INTEGER NOT NULL DEFAULT 0, `dataFavoritado` INTEGER, `dataLeitura` INTEGER, `notaUsuario` TEXT DEFAULT '', PRIMARY KEY(`poesiaId`), FOREIGN KEY(`poesiaId`) REFERENCES `poesias`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "poesiaId",
+            "columnName": "poesiaId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ehFavorita",
+            "columnName": "ehFavorita",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "foiLida",
+            "columnName": "foiLida",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "dataFavoritado",
+            "columnName": "dataFavoritado",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "dataLeitura",
+            "columnName": "dataLeitura",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "notaUsuario",
+            "columnName": "notaUsuario",
+            "affinity": "TEXT",
+            "defaultValue": "''"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "poesiaId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "poesias",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "poesiaId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "personagens",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `descricao` TEXT NOT NULL, `imagem_url` TEXT, `dataCriacao` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descricao",
+            "columnName": "descricao",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imagem",
+            "columnName": "imagem_url",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dataCriacao",
+            "columnName": "dataCriacao",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_personagens_nome",
+            "unique": true,
+            "columnNames": [
+              "nome"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_personagens_nome` ON `${TABLE_NAME}` (`nome`)"
+          }
+        ]
+      },
+      {
+        "tableName": "informativos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`chave` TEXT NOT NULL, `conteudo` TEXT NOT NULL, `dataAtualizacao` INTEGER NOT NULL, PRIMARY KEY(`chave`))",
+        "fields": [
+          {
+            "fieldPath": "chave",
+            "columnName": "chave",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conteudo",
+            "columnName": "conteudo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataAtualizacao",
+            "columnName": "dataAtualizacao",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "chave"
+          ]
+        }
+      },
+      {
+        "tableName": "atelier",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `conteudo` TEXT NOT NULL, `dataAtualizacao` INTEGER NOT NULL, `fixada` INTEGER NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titulo",
+            "columnName": "titulo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conteudo",
+            "columnName": "conteudo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataAtualizacao",
+            "columnName": "dataAtualizacao",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fixada",
+            "columnName": "fixada",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_atelier_dataAtualizacao",
+            "unique": false,
+            "columnNames": [
+              "dataAtualizacao"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_atelier_dataAtualizacao` ON `${TABLE_NAME}` (`dataAtualizacao`)"
+          },
+          {
+            "name": "index_atelier_fixada",
+            "unique": false,
+            "columnNames": [
+              "fixada"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_atelier_fixada` ON `${TABLE_NAME}` (`fixada`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8af0d03eb424d9a7e0a23c665ebe44c9')"
+    ]
+  }
+}

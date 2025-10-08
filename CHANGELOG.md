@@ -10,7 +10,7 @@ adere ao [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
 ### Adicionado
 
 - Criação da estrutura inicial do projeto em Kotlin e Jetpack Compose.
-- Configuração do banco de dados com SQLDelight.
+- Configuração do banco de dados com Room.
 - Definição do roteiro de desenvolvimento inicial no `GEMINI.md`.
 - Implementação da arquitetura base com Hilt, MVVM e Navegação do Compose.
 - Adição dos documentos de comunidade: `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`,

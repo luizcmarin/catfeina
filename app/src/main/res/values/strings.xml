@@ -131,5 +131,6 @@
     <string name="aumentar_fonte">Aumentar o texto</string>
     <string name="selecionar_tema">Selecionar Tema</string>
     <string name="menu_temas">Temas</string>
+    <string name="menu_atelier">Atelier</string>
 
 </resources>
